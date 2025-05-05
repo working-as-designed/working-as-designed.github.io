@@ -1,0 +1,15 @@
+title: working-as-designed
+description: This is my blog. There are many like it, but this one is mine.
+baseurl: ""
+url: "https://working-as-designed.github.io"
+theme: minimal-mistakes-jekyll
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-tagging
+
+tag_page_layout: tag_page
+tag_page_dir: tags
+tag_permalink_style: pretty
+
