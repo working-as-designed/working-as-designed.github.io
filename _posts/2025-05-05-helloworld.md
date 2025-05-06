@@ -29,201 +29,248 @@ Here's some things to know about me that (hopefully) will shine through in the b
 
 Like all my programming these days, I started with GPT. I'll save you all the errors that it made, and stick to the salient points.
 
-1. Keep it simple, use Jekyll
-    - **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages
+1. Use Jekyll
+    - **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages. That's all we need for now. This is a god time to go find a plastic baggie, because you're probably going to throw up in your mouth a little bit. It's Ruby!
 2. Create the github repo
+   - For me, its `working-as-designed.github.io`. Wow! nobody claimed it already. So lucky.
 3. Add some content to your local repo. You'll want:
-```
-Gemfile
-_config.yml
-_layouts/tag_page.html (for using jekyll's built-in tagging feature)
-_posts/
-assets/
-```
-4. Add the needful to the `Gemfile`
-5. Create a basic `_config.yml`
+    ```
+    Gemfile
+    _config.yml
+    _layouts/tag_page.html (for using jekyll's built-in tagging feature)
+    _posts/
+    assets/
+    ```
+4. Add the needful to the `Gemfile`. These are the imports that github will need to be making on our behalf.
+    ```
+    gem "jekyll", "~> 4.3.3"
+
+    # Plugins
+    gem "jekyll-feed"
+    gem "jekyll-seo-tag"
+    gem "minimal-mistakes-jekyll"
+    ```
+5. Create a basic `_config.yml`. This is an ultra-basic configuration, cause we keep it simple, baby
+    ```yml
+    title: working-as-designed
+    description: This is my blog. There are many like it, but this one is mine.
+    baseurl: ""
+    url: "https://working-as-designed.github.io"
+    theme: minimal-mistakes-jekyll
+
+    plugins:
+    - jekyll-feed
+    - jekyll-seo-tag
+
+    tag_page_layout: tag_page
+    tag_page_dir: tags
+    tag_permalink_style: pretty
+    ```
 6. Create some helper scripts
     1. New Post boilerplate
-    ```py
-    import os
-    import sys
-    import datetime
-    import re
+        ```py
+        import os
+        import sys
+        import datetime
+        import re
 
-    def slugify(title):
-        # Convert to lowercase, remove non-word characters, and replace spaces with dashes
-        return re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+        def slugify(title):
+            # Convert to lowercase, remove non-word characters, and replace spaces with dashes
+            return re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
 
-    def create_post(title):
-        today = datetime.date.today()
-        year = today.strftime("%Y")
-        month = today.strftime("%m")
-        day = today.strftime("%d")
+        def create_post(title):
+            today = datetime.date.today()
+            year = today.strftime("%Y")
+            month = today.strftime("%m")
+            day = today.strftime("%d")
 
-        slug = slugify(title)
-        filename = f"{year}-{month}-{day}-{slug}.md"
-        post_path = os.path.join("_posts", filename)
-        asset_path = os.path.join("assets", "images", year, month, slug)
+            slug = slugify(title)
+            filename = f"{year}-{month}-{day}-{slug}.md"
+            post_path = os.path.join("_posts", filename)
+            asset_path = os.path.join("assets", "images", year, month, slug)
 
-        # Make directories if needed
-        os.makedirs(asset_path, exist_ok=True)
+            # Make directories if needed
+            os.makedirs(asset_path, exist_ok=True)
 
-        # Markdown front matter template
-        content = f"""---
-    layout: post
-    title: "{title}"
-    date: {year}-{month}-{day}
-    tags: []
-    ---
+            # Markdown front matter template
+            content = f"""---
+        layout: post
+        title: "{title}"
+        date: {year}-{month}-{day}
+        tags: []
+        ---
 
-    ![Alt text](/assets/images/{year}/{month}/{slug}/image.png)
+        ![Alt text](/assets/images/{year}/{month}/{slug}/image.png)
 
-    Write your content here.
-    """
+        Write your content here.
+        """
 
-        with open(post_path, "w") as f:
-            f.write(content)
+            with open(post_path, "w") as f:
+                f.write(content)
 
-        print(f"✔ Created post: {post_path}")
-        print(f"✔ Created asset folder: {asset_path}")
+            print(f"✔ Created post: {post_path}")
+            print(f"✔ Created asset folder: {asset_path}")
 
-    if __name__ == "__main__":
-        if len(sys.argv) < 2:
-            print("Usage: python newpost.py \"Post Title Here\"")
-            sys.exit(1)
+        if __name__ == "__main__":
+            if len(sys.argv) < 2:
+                print("Usage: python newpost.py \"Post Title Here\"")
+                sys.exit(1)
 
-        title = sys.argv[1]
-        create_post(title)
-    ```
+            title = sys.argv[1]
+            create_post(title)
+        ```
     2. Generate tag pages
-    ```py
-    import os
-    import yaml
-    import re
+        ```py
+        import os
+        import yaml
+        import re
 
-    POSTS_DIR = "_posts"
-    TAGS_DIR = "tags"
+        POSTS_DIR = "_posts"
+        TAGS_DIR = "tags"
 
-    def get_all_tags():
-        tags = set()
+        def get_all_tags():
+            tags = set()
 
-        # Scan all posts
-        for filename in os.listdir(POSTS_DIR):
-            if filename.endswith('.md'):
-                filepath = os.path.join(POSTS_DIR, filename)
+            # Scan all posts
+            for filename in os.listdir(POSTS_DIR):
+                if filename.endswith('.md'):
+                    filepath = os.path.join(POSTS_DIR, filename)
 
-                # Open and read the front matter of each post
-                with open(filepath, 'r', encoding='utf-8') as file:
-                    content = file.read()
-                    # Extract YAML front matter (between the first '---')
-                    if content.startswith('---'):
-                        try:
-                            front_matter_end = content.index('---', 3)
-                            front_matter = yaml.safe_load(content[3:front_matter_end])
+                    # Open and read the front matter of each post
+                    with open(filepath, 'r', encoding='utf-8') as file:
+                        content = file.read()
+                        # Extract YAML front matter (between the first '---')
+                        if content.startswith('---'):
+                            try:
+                                front_matter_end = content.index('---', 3)
+                                front_matter = yaml.safe_load(content[3:front_matter_end])
 
-                            # Collect all tags from the post
-                            if 'tags' in front_matter:
-                                tags.update(front_matter['tags'])
+                                # Collect all tags from the post
+                                if 'tags' in front_matter:
+                                    tags.update(front_matter['tags'])
 
-                        except yaml.YAMLError as e:
-                            print(f"Error reading front matter in {filename}: {e}")
+                            except yaml.YAMLError as e:
+                                print(f"Error reading front matter in {filename}: {e}")
 
-        return tags
+            return tags
 
-    def create_tag_page(tag):
-        # Define tag page content
-        tag_slug = re.sub(r'\s+', '-', tag.lower())
-        tag_page_content = f"""---
-    layout: tag
-    tag: {tag}
-    title: "Posts tagged with {tag}"
-    permalink: /tags/{tag_slug}/
-    ---
-    """
+        def create_tag_page(tag):
+            # Define tag page content
+            tag_slug = re.sub(r'\s+', '-', tag.lower())
+            tag_page_content = f"""---
+        layout: tag
+        tag: {tag}
+        title: "Posts tagged with {tag}"
+        permalink: /tags/{tag_slug}/
+        ---
+        """
 
-        # Define the file path
-        tag_file_path = os.path.join(TAGS_DIR, f"{tag_slug}.md")
+            # Define the file path
+            tag_file_path = os.path.join(TAGS_DIR, f"{tag_slug}.md")
 
-        # Create the file if it doesn't already exist
-        if not os.path.exists(tag_file_path):
-            os.makedirs(TAGS_DIR, exist_ok=True)
-            with open(tag_file_path, 'w', encoding='utf-8') as tag_file:
-                tag_file.write(tag_page_content)
-            print(f"Created tag page for: {tag}")
-        else:
-            print(f"Tag page for '{tag}' already exists.")
+            # Create the file if it doesn't already exist
+            if not os.path.exists(tag_file_path):
+                os.makedirs(TAGS_DIR, exist_ok=True)
+                with open(tag_file_path, 'w', encoding='utf-8') as tag_file:
+                    tag_file.write(tag_page_content)
+                print(f"Created tag page for: {tag}")
+            else:
+                print(f"Tag page for '{tag}' already exists.")
 
-    def main():
-        tags = get_all_tags()
-        print(f"Found tags: {tags}")
+        def main():
+            tags = get_all_tags()
+            print(f"Found tags: {tags}")
 
-        for tag in tags:
-            create_tag_page(tag)
+            for tag in tags:
+                create_tag_page(tag)
 
-    if __name__ == "__main__":
-        main()
-    ```
+        if __name__ == "__main__":
+            main()
+        ```
     3. Make our scripts executable with `chmod +x`
-7. Install lefthook (ubuntu)
+7. Install lefthook (on ubuntu)
     - `curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.deb.sh' | sudo -E bash; sudo apt install lefthook`
+    - At the time of this writing, I'm using version `1.11.12`, and GPT is ALL OVER THE PLACE with its' suggestions about it. Beware.
     1. Run `lefthook install` in the repo
+        - If lefthook ain't doing shit, you probably need to modify `/lefthook.yml`. We wil return to this momentarily...
     2.  Add some pre-commit scripts
         1. Does your front matter exist?
-        ```sh
-        echo "🔍 Running front matter checks..."
+            ```sh
+            echo "🔍 Running front matter checks..."
 
-        # Check YAML front matter in all Markdown posts
-        for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
-            if ! grep -q "^---" "$file"; then
-                echo "❌ Missing front matter in $file"
-                exit 1
-            fi
-        done
-
-        echo "✅ Front Matter looks good"
-        ```
-        2. Are your image paths valid?
-        ```sh
-        echo "🔍 Running image path validation check..."
-
-        # Check image references exist
-        for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
-            grep -oP '!\[.*?\]\(\K.*?(?=\))' "$file" | while read -r img; do
-                if [ ! -f ".$img" ]; then
-                    echo "⚠️ Warning: image not found: $img (referenced in $file)"
+            # Check YAML front matter in all Markdown posts
+            for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+                if ! grep -q "^---" "$file"; then
+                    echo "❌ Missing front matter in $file"
+                    exit 1
                 fi
             done
-        done
 
-        echo "✅ All image references are valid"
-        ```
+            echo "✅ Front Matter looks good"
+            ```
+        2. Are your image paths valid?
+            ```sh
+            echo "🔍 Running image path validation check..."
+
+            # Check image references exist
+            for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+                grep -oP '!\[.*?\]\(\K.*?(?=\))' "$file" | while read -r img; do
+                    if [ ! -f ".$img" ]; then
+                        echo "⚠️ Warning: image not found: $img (referenced in $file)"
+                    fi
+                done
+            done
+
+            echo "✅ All image references are valid"
+            ```
         3. Do you need to update/generate tag pages?
-        ```sh
-        echo "🔁 Generating tag pages..."
-        python3 generate_tag_pages.py
+            ```sh
+            echo "🔁 Generating tag pages..."
+            python3 generate_tag_pages.py
 
-        if [ $? -ne 0 ]; then
-          echo "❌ Tag generation failed. Commit aborted."
-          exit 1
-        fi
+            if [ $? -ne 0 ]; then
+            echo "❌ Tag generation failed. Commit aborted."
+            exit 1
+            fi
 
-        # Auto-add new tag files to the commit
-        git add tags/*.md
+            # Auto-add new tag files to the commit
+            git add tags/*.md
 
-        echo "✅ Tag pages updated and staged."
-        ```
+            echo "✅ Tag pages updated and staged."
+            ```
     3.  Add some pre-push scripts
         1. Does your blog build?
-        ```sh
-        echo "🛠 Building site before push..."
+            ```sh
+            echo "🛠 Building site before push..."
 
-        bundle exec jekyll build --future > /dev/null
+            bundle exec jekyll build --future > /dev/null
 
-        if [ $? -ne 0 ]; then
-            echo "❌ Jekyll build failed. Push aborted."
-            exit 1
-        else
-            echo "✅ Jekyll build successful. Proceeding with push."
-        fi
+            if [ $? -ne 0 ]; then
+                echo "❌ Jekyll build failed. Push aborted."
+                exit 1
+            else
+                echo "✅ Jekyll build successful. Proceeding with push."
+            fi
+            ```
+    4. Make sure your new scripts are executable with another `chmod +x`
+    5. Then, make sure `lefthook.yml` references your pre-commit/pre-push scripts
+        ```yml
+        pre-commit:
+        jobs:
+            - name: front_matter_check
+            run:
+                .lefthook/pre-commit/front_matter_check.sh
+            - name: valid_images_check
+            run:
+                .lefthook/pre-commit/valid_images_check.sh
+            - name: tag_page_creation
+            run:
+                .lefthook/pre-commit/tag_page_creation.sh
+
+        pre-push:
+        jobs:
+            - name: build_site
+            run:
+                .lefthook/pre-push/build_site.sh
         ```
-8. test
+8. By now, hopefully you're seeing fun outputs whenever you make new commits to the repo. Make sure to check your `git status` before pushing, you might need to commit newly auto-generated content.

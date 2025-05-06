@@ -1,26 +1,17 @@
-# EXAMPLE USAGE:
-#
-#   Refer for explanation to following link:
-#   https://lefthook.dev/configuration/
-pre-push:
-  scripts:
-    build_site:
-      run: .lefthook/pre-push/build_site.sh
-
-  jobs:
-    - name: gems audit
-      tags:
-        - backend
-        - security
-      run: bundle audit
-
 pre-commit:
-  parallel: true
-  scripts:
-    front_matter_check:
-      run: .lefthook/pre-commit/front_matter_check.sh
-    valid_images_check:
-      run: .lefthook/pre-commit/valid_images_check.sh
-    tag_page_creation:
-      run: .lefthook/pre-commit/tag_page_creation.sh
+  jobs:
+    - name: front_matter_check
+      run:
+        .lefthook/pre-commit/front_matter_check.sh
+    - name: valid_images_check
+      run:
+        .lefthook/pre-commit/valid_images_check.sh
+    - name: tag_page_creation
+      run:
+        .lefthook/pre-commit/tag_page_creation.sh
 
+pre-push:
+  jobs:
+    - name: build_site
+      run:
+        .lefthook/pre-push/build_site.sh
