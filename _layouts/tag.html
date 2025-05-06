@@ -1,26 +1,30 @@
 ---
-layout: default
+layout: single
 ---
-
-<h1>🧷 Posts tagged with: <span class="tag">{{ page.tag }}</span></h1>
-
-<p><a href="/">← Back to Home</a> | <a href="/tags/">Browse All Tags</a></p>
 
 {% assign tagged_posts = site.posts | sort: 'date' | reverse %}
 {% assign has_matches = false %}
 
-<ul aria-labelledby="tagged-posts">
-  {% for post in tagged_posts %}
-    {% if post.tags contains page.tag %}
-      {% assign has_matches = true %}
-      <li>
-        <a href="{{ post.url }}">{{ post.title }}</a>
-        <small>({{ post.date | date: "%Y-%m-%d" }})</small>
-      </li>
-    {% endif %}
-  {% endfor %}
-</ul>
+<h1>🧷 Posts tagged with “{{ page.tag }}”</h1>
+
+{% if tagged_posts %}
+  <ul>
+    {% for post in tagged_posts %}
+      {% if post.tags contains page.tag %}
+        {% assign has_matches = true %}
+        <li>
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          <br>
+          <small>{{ post.date | date: "%Y-%m-%d" }}</small>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
 
 {% unless has_matches %}
-  <p><em>No posts found with this tag yet.</em></p>
+  <p><em>No posts found for this tag.</em></p>
 {% endunless %}
+
+<p><a href="{{ '/' | relative_url }}">← Back to Home</a> |
+<a href="{{ '/tags/' | relative_url }}">Browse All Tags</a></p>
