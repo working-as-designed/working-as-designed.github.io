@@ -1,67 +1,58 @@
 #!/usr/bin/env python3
+
 import os
 import yaml
-import re
+from glob import glob
+from pathlib import Path
+from slugify import slugify  # pip install python-slugify
 
 POSTS_DIR = "_posts"
 TAGS_DIR = "tags"
 
-def get_all_tags():
-    tags = set()
+def extract_tags_from_post(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+        if content.startswith("---"):
+            end = content.find("---", 3)
+            if end != -1:
+                front_matter = content[3:end]
+                try:
+                    metadata = yaml.safe_load(front_matter)
+                    return metadata.get('tags', [])
+                except yaml.YAMLError:
+                    print(f"⚠️ Failed to parse YAML in: {file_path}")
+    return []
 
-    # Scan all posts
-    for filename in os.listdir(POSTS_DIR):
-        if filename.endswith('.md'):
-            filepath = os.path.join(POSTS_DIR, filename)
+def collect_all_tags():
+    tag_map = {}
+    for file in glob(f"{POSTS_DIR}/*.md"):
+        tags = extract_tags_from_post(file)
+        for tag in tags:
+            tag_slug = slugify(tag)
+            tag_map.setdefault(tag_slug, {
+                "name": tag,
+                "posts": []
+            })
+            tag_map[tag_slug]["posts"].append(file)
+    return tag_map
 
-            # Open and read the front matter of each post
-            with open(filepath, 'r', encoding='utf-8') as file:
-                content = file.read()
-                # Extract YAML front matter (between the first '---')
-                if content.startswith('---'):
-                    try:
-                        front_matter_end = content.index('---', 3)
-                        front_matter = yaml.safe_load(content[3:front_matter_end])
-
-                        # Collect all tags from the post
-                        if 'tags' in front_matter:
-                            tags.update(front_matter['tags'])
-
-                    except yaml.YAMLError as e:
-                        print(f"Error reading front matter in {filename}: {e}")
-
-    return tags
-
-def create_tag_page(tag):
-    # Define tag page content
-    tag_slug = re.sub(r'\s+', '-', tag.lower())
-    tag_page_content = f"""---
+def generate_tag_pages(tag_map):
+    os.makedirs(TAGS_DIR, exist_ok=True)
+    for slug, data in tag_map.items():
+        tag_filename = os.path.join(TAGS_DIR, f"{slug}.html")
+        with open(tag_filename, 'w', encoding='utf-8') as f:
+            f.write(f"""---
 layout: tag
-tag: {tag}
-title: "Posts tagged with {tag}"
-permalink: /tags/{tag_slug}/
+title: "Posts tagged with '{data['name']}'"
+tag: {data['name']}
+permalink: /tags/{slug}.html
 ---
-"""
 
-    # Define the file path
-    tag_file_path = os.path.join(TAGS_DIR, f"{tag_slug}.md")
-
-    # Create the file if it doesn't already exist
-    if not os.path.exists(tag_file_path):
-        os.makedirs(TAGS_DIR, exist_ok=True)
-        with open(tag_file_path, 'w', encoding='utf-8') as tag_file:
-            tag_file.write(tag_page_content)
-        print(f"Created tag page for: {tag}")
-    else:
-        print(f"Tag page for '{tag}' already exists.")
-
-def main():
-    tags = get_all_tags()
-    print(f"Found tags: {tags}")
-
-    for tag in tags:
-        create_tag_page(tag)
+<!-- This page is auto-generated -->
+""")
+        print(f"👍 Created tag page: {tag_filename}")
 
 if __name__ == "__main__":
-    main()
-
+    tag_map = collect_all_tags()
+    generate_tag_pages(tag_map)
+    print("✅ All tag pages generated successfully.")

@@ -8,7 +8,22 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
-tag_page_layout: tag_page
+tag_page_layout: tag
 tag_page_dir: tags
 tag_permalink_style: pretty
 
+# Enable sidebar globally
+sidebar:
+  enabled: true
+  nav: "main"     # Refers to _data/navigation.yml
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: single
+      sidebar:
+        enabled: true
+        nav: main
+        custom: custom-sidebar
