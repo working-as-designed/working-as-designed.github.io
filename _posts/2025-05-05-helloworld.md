@@ -212,16 +212,26 @@ Like all my programming these days, I started with GPT. I'll save you all the er
             ```sh
             echo "🔍 Running image path validation check..."
 
+            # Initialize a list to store validated images
+            validated_images=()
+
             # Check image references exist
             for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
-                grep -oP '!\[.*?\]\(\K.*?(?=\))' "$file" | while read -r img; do
-                    if [ ! -f ".$img" ]; then
-                        echo "⚠️ Warning: image not found: $img (referenced in $file)"
+                while IFS= read -r line; do
+                    # Extract line number and image path
+                    line_number=$(echo "$line" | cut -d: -f1)
+                    img=$(echo "$line" | cut -d: -f2-)
+
+                    if [ -f ".$img" ]; then
+                        echo "👍 Image validated: $img (line $line_number in $file)"
+                        validated_images+=("$img")
+                    else
+                        echo "🚨 Warning: percieved image not found: $img (line $line_number in $file)"
                     fi
-                done
+                done < <(grep -n -oP '!\[.*?\]\(\K.*?(?=\))' "$file")
             done
 
-            echo "✅ All image references are valid"
+            echo "✅ Image path validation check complete."
             ```
         3. Do you need to update/generate tag pages?
             ```sh
