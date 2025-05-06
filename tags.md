@@ -1,5 +1,5 @@
 ---
 title: "Browse Tags"
-layout: tags
+layout: custom-tag
 permalink: /tags/
 ---

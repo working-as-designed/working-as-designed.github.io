@@ -42,7 +42,7 @@ def generate_tag_pages(tag_map):
         tag_filename = os.path.join(TAGS_DIR, f"{slug}.html")
         with open(tag_filename, 'w', encoding='utf-8') as f:
             f.write(f"""---
-layout: tag
+layout: custom-tag
 title: "Posts tagged with '{data['name']}'"
 tag: {data['name']}
 permalink: /tags/{slug}.html
