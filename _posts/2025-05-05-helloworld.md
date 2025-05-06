@@ -11,10 +11,9 @@ This is more of a test post than anything else, but welcome to my web log! Exper
 Here's some things to know about me that (hopefully) will shine through in the blog posts to come:
 
 1. I'm not a smart person, but I ain't no dumbass. I get by.
-     - I make mistakes. A lot of them. Sometimes I choose to work inefficiently, sometimes I just don't know no better.
-     - I like for things to just work until the thing is dead, and it's time to fashion a replacement. I'm not trying to work harder than I have to, I'm a bit of a luddite, if it works then it works.
+     - I make mistakes. A lot of them. Sometimes I choose to work inefficiently, sometimes I just don't know no better. I always reserve the right to be wrong, so take nothing here as gospel, think critically. If the content works for your situation, great!
      - I intend to spell everything out plainly in my writing. If it's an instructional, I'll put the exact tools I used, the steps I took, the commands I entered to arrive at the end state. If I don't, get at me, I'll do my best to update the content.
-     - Rarely if ever, will I be posting about something novel and new. I'm an iterator and collaborator, I recognise good things and modify them to my own purposes.
+     - I'm an iterator and collaborator, I recognise good things and modify them to my own purposes. Rarely if ever, will I be posting about something novel and new. I like for things to just work until the thing is dead, and it's time to fashion a replacement. I'm not trying to work harder than I have to, I'm a bit of a luddite, if it works then it works. It's the way of my people.
 2. I suffer from good intentions.
      - Sometimes my eyes are bigger than my stomach. I'll try my best to only write about things that are done, never teasing work to come. A lot of blogs on the internet read like sprints, highly active for a few years and then the author's attention moves on to other things. I'm only human and I'm planning to be one...
 3. It's all a work in progress, your inputs are welcomed.
@@ -42,10 +41,14 @@ Like all my programming these days, I started with GPT. I'll save you all the er
     ```
 4. Add the needful to the `Gemfile`. These are the imports that github will need to be making on our behalf.
     ```
+    source "https://rubygems.org"
+
     gem "jekyll", "~> 4.3.3"
 
     # Plugins
+    gem 'faraday-retry'
     gem "jekyll-feed"
+    gem "jekyll-remote-theme"
     gem "jekyll-seo-tag"
     gem "minimal-mistakes-jekyll"
     ```
@@ -55,7 +58,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
     description: This is my blog. There are many like it, but this one is mine.
     baseurl: ""
     url: "https://working-as-designed.github.io"
-    remote-theme: minimal-mistakes-jekyll
+    theme: minimal-mistakes-jekyll
 
     plugins:
     - jekyll-feed
@@ -80,6 +83,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
             enabled: true
             nav: main
             custom: custom-sidebar
+
     ```
 6. Create some helper scripts
     1. New Post boilerplate
@@ -329,5 +333,8 @@ Like all my programming these days, I started with GPT. I'll save you all the er
                 force_orphan: true
                 keep_files: false
        ```
-9.  By now, hopefully you're seeing fun outputs whenever you make new commits to the repo. Make sure to check your `git status` before pushing, you might need to commit newly auto-generated content.
+
+## Conclusion
+
+By now, hopefully you're seeing fun outputs whenever you make new commits to the repo. Make sure to check your `git status` before pushing, you might need to commit newly auto-generated content.
    - **Important:** I might've missed some steps. I spent 12 hours off and on fighting Jekyll to get a successful deployment, I did my best to capture what is relevant in this post.

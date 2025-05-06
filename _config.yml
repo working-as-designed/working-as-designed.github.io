@@ -2,7 +2,6 @@ title: working-as-designed
 description: This is my blog. There are many like it, but this one is mine.
 baseurl: ""
 url: "https://working-as-designed.github.io"
-#remote-theme: minimal-mistakes/minimal-mistakes-jekyll
 theme: minimal-mistakes-jekyll
 
 plugins:
