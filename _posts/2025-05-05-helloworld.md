@@ -33,7 +33,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
     - **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages. That's all we need for now. This is a god time to go find a plastic baggie, because you're probably going to throw up in your mouth a little bit. It's Ruby!
 2. Create the github repo
    - For me, its `working-as-designed.github.io`. Wow! nobody claimed it already. So lucky.
-3. Add some content to your local repo. You'll want:
+3. Add some content to your local repo. You'll want these at least, but probably more depending on how fancy you get with custom theming:
     ```
     Gemfile
     _config.yml
@@ -56,15 +56,31 @@ Like all my programming these days, I started with GPT. I'll save you all the er
     description: This is my blog. There are many like it, but this one is mine.
     baseurl: ""
     url: "https://working-as-designed.github.io"
-    theme: minimal-mistakes-jekyll
+    remote-theme: minimal-mistakes-jekyll
 
     plugins:
     - jekyll-feed
     - jekyll-seo-tag
 
-    tag_page_layout: tag_page
+    tag_page_layout: custom-tag
     tag_page_dir: tags
     tag_permalink_style: pretty
+
+    # Enable sidebar globally
+    sidebar:
+    enabled: true
+    nav: "main"     # Refers to _data/navigation.yml
+
+    defaults:
+    - scope:
+        path: ""
+        type: "posts"
+        values:
+        layout: single
+        sidebar:
+            enabled: true
+            nav: main
+            custom: custom-sidebar
     ```
 6. Create some helper scripts
     1. New Post boilerplate
@@ -121,6 +137,8 @@ Like all my programming these days, I started with GPT. I'll save you all the er
         ```
     2. Generate tag pages
         ```py
+        #!/usr/bin/env python3
+
         import os
         import yaml
         from glob import glob
@@ -163,7 +181,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
                 tag_filename = os.path.join(TAGS_DIR, f"{slug}.html")
                 with open(tag_filename, 'w', encoding='utf-8') as f:
                     f.write(f"""---
-        layout: tag
+        layout: custom-tag
         title: "Posts tagged with '{data['name']}'"
         tag: {data['name']}
         permalink: /tags/{slug}.html
@@ -275,4 +293,42 @@ Like all my programming these days, I started with GPT. I'll save you all the er
             run:
                 .lefthook/pre-push/build_site.sh
         ```
-8. By now, hopefully you're seeing fun outputs whenever you make new commits to the repo. Make sure to check your `git status` before pushing, you might need to commit newly auto-generated content.
+8. Check your deployment method
+    1. This blog is using github actions, this is the definition that's working for me. **MAKE SURE** that your pages settings for the repository are correct. You want to be deploying from a branch called `gh-pages`, make it if you don't have one. I'm using `/ (root)` as my folder because it seemed right at the beginning when I didn't know what I was doing.
+        - **TURNS OUT**, the theme I'm using assumes a `docs/` directory, so I needed to go back and rework my config to use a remote-theme.
+        ```
+        name: Build and Deploy Jekyll
+
+        on:
+        push:
+            branches: [main]
+
+        jobs:
+        build-deploy:
+            runs-on: ubuntu-latest
+            steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Ruby
+                uses: ruby/setup-ruby@v1
+                with:
+                ruby-version: '3.1'
+
+            - name: Install dependencies
+                run: |
+                gem install bundler
+                bundle install
+
+            - name: Build site
+                run: bundle exec jekyll build -d _site
+
+            - name: Deploy to GitHub Pages
+                uses: peaceiris/actions-gh-pages@v3
+                with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: ./_site
+                force_orphan: true
+                keep_files: false
+       ```
+9.  By now, hopefully you're seeing fun outputs whenever you make new commits to the repo. Make sure to check your `git status` before pushing, you might need to commit newly auto-generated content.
+   - **Important:** I might've missed some steps. I spent 12 hours off and on fighting Jekyll to get a successful deployment, I did my best to capture what is relevant in this post.

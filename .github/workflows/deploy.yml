@@ -23,19 +23,6 @@ jobs:
       - name: Build site
         run: bundle exec jekyll build -d _site
 
-      - name: Configure Git user
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-
-      - name: Ensure gh-pages branch exists
-        run: |
-          git fetch origin
-          git checkout --orphan gh-pages || git checkout gh-pages
-          git reset --hard
-          git commit --allow-empty -m "Initialize gh-pages branch"
-          git push origin gh-pages
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
