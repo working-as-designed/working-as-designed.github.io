@@ -1,24 +1,229 @@
 ---
 layout: post
 title: "Hello World!"
-tags: [helloworld]
+tags: [helloworld, jekyll]
 ---
+
+## Hello World!
 
 This is more of a test post than anything else, but welcome to my web log! Experience has taught me that computers are pain and that memory is fickle, I'm writing these posts with myself as the primary audience and I'm publishing them so that maybe they can help somebody else out.
 
 Here's some things to know about me that (hopefully) will shine through in the blog posts to come:
 
-0. I'm not a smart person, but I ain't no dumbass. I get by.
-  - I make mistakes. A lot of them. Sometimes I choose to work inefficiently, sometimes I just don't know no better.
-  - I like for things to just work until the thing is dead, and it's time to fashion a replacement. I'm not trying to work harder than I have to, I'm a bit of a luddite, if it works then it works.
-  - I intend to spell everything out plainly in my writing. If it's an instructional, I'll put the exact tools I used, the steps I took, the commands I entered to arrive at the end state. If I don't, get at me, I'll do my best to update the content.
-  - Rarely if ever, will I be posting about something novel and new. I'm an iterator and collaborator, I recognise good things and modify them to my own purposes.
-1. I suffer from good intentions.
-  - Sometimes my eyes are bigger than my stomach. I'll try my best to only write about things that are done, never teasing work to come. A lot of blogs on the internet read like sprints, highly active for a few years and then the author's attention moves on to other things. I'm only human and I'm planning to be one...
-2. Your thoughts and inputs are welcomed.
-  - I'm never (lol, "never say never") going to add any kind of commenting feature here. But if you know or can find a way to contact me, I'd love to hear what you have to say about the post.
-  - Thinking about it a little, that's probably best facilitated through issues, pull requests?, or any contact info that may, or may not be associated to my profile.
+1. I'm not a smart person, but I ain't no dumbass. I get by.
+     - I make mistakes. A lot of them. Sometimes I choose to work inefficiently, sometimes I just don't know no better.
+     - I like for things to just work until the thing is dead, and it's time to fashion a replacement. I'm not trying to work harder than I have to, I'm a bit of a luddite, if it works then it works.
+     - I intend to spell everything out plainly in my writing. If it's an instructional, I'll put the exact tools I used, the steps I took, the commands I entered to arrive at the end state. If I don't, get at me, I'll do my best to update the content.
+     - Rarely if ever, will I be posting about something novel and new. I'm an iterator and collaborator, I recognise good things and modify them to my own purposes.
+2. I suffer from good intentions.
+     - Sometimes my eyes are bigger than my stomach. I'll try my best to only write about things that are done, never teasing work to come. A lot of blogs on the internet read like sprints, highly active for a few years and then the author's attention moves on to other things. I'm only human and I'm planning to be one...
+3. It's all a work in progress, your inputs are welcomed.
+     - I'm never (lol, "never say never") going to add any kind of commenting feature here. But if you know or can find a way to contact me, I'd love to hear what you have to say about the post.
+     - Thinking about it a little, that's probably best facilitated through issues, pull requests?, or any contact info that may, or may not be associated to my profile.
 
 <div style="text-align: center;">
 ![pika](/assets/images/2025/05/helloworld/hello_pikachu.png)
 </div>
+
+## Setup of this web log
+
+Like all my programming these days, I started with GPT. I'll save you all the errors that it made, and stick to the salient points.
+
+1. Keep it simple, use Jekyll
+    - **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages
+2. Create the github repo
+3. Add some content to your local repo. You'll want:
+```
+Gemfile
+_config.yml
+_layouts/tag_page.html (for using jekyll's built-in tagging feature)
+_posts/
+assets/
+```
+4. Add the needful to the `Gemfile`
+5. Create a basic `_config.yml`
+6. Create some helper scripts
+    1. New Post boilerplate
+    ```py
+    import os
+    import sys
+    import datetime
+    import re
+
+    def slugify(title):
+        # Convert to lowercase, remove non-word characters, and replace spaces with dashes
+        return re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+
+    def create_post(title):
+        today = datetime.date.today()
+        year = today.strftime("%Y")
+        month = today.strftime("%m")
+        day = today.strftime("%d")
+
+        slug = slugify(title)
+        filename = f"{year}-{month}-{day}-{slug}.md"
+        post_path = os.path.join("_posts", filename)
+        asset_path = os.path.join("assets", "images", year, month, slug)
+
+        # Make directories if needed
+        os.makedirs(asset_path, exist_ok=True)
+
+        # Markdown front matter template
+        content = f"""---
+    layout: post
+    title: "{title}"
+    date: {year}-{month}-{day}
+    tags: []
+    ---
+
+    ![Alt text](/assets/images/{year}/{month}/{slug}/image.png)
+
+    Write your content here.
+    """
+
+        with open(post_path, "w") as f:
+            f.write(content)
+
+        print(f"✔ Created post: {post_path}")
+        print(f"✔ Created asset folder: {asset_path}")
+
+    if __name__ == "__main__":
+        if len(sys.argv) < 2:
+            print("Usage: python newpost.py \"Post Title Here\"")
+            sys.exit(1)
+
+        title = sys.argv[1]
+        create_post(title)
+    ```
+    2. Generate tag pages
+    ```py
+    import os
+    import yaml
+    import re
+
+    POSTS_DIR = "_posts"
+    TAGS_DIR = "tags"
+
+    def get_all_tags():
+        tags = set()
+
+        # Scan all posts
+        for filename in os.listdir(POSTS_DIR):
+            if filename.endswith('.md'):
+                filepath = os.path.join(POSTS_DIR, filename)
+
+                # Open and read the front matter of each post
+                with open(filepath, 'r', encoding='utf-8') as file:
+                    content = file.read()
+                    # Extract YAML front matter (between the first '---')
+                    if content.startswith('---'):
+                        try:
+                            front_matter_end = content.index('---', 3)
+                            front_matter = yaml.safe_load(content[3:front_matter_end])
+
+                            # Collect all tags from the post
+                            if 'tags' in front_matter:
+                                tags.update(front_matter['tags'])
+
+                        except yaml.YAMLError as e:
+                            print(f"Error reading front matter in {filename}: {e}")
+
+        return tags
+
+    def create_tag_page(tag):
+        # Define tag page content
+        tag_slug = re.sub(r'\s+', '-', tag.lower())
+        tag_page_content = f"""---
+    layout: tag
+    tag: {tag}
+    title: "Posts tagged with {tag}"
+    permalink: /tags/{tag_slug}/
+    ---
+    """
+
+        # Define the file path
+        tag_file_path = os.path.join(TAGS_DIR, f"{tag_slug}.md")
+
+        # Create the file if it doesn't already exist
+        if not os.path.exists(tag_file_path):
+            os.makedirs(TAGS_DIR, exist_ok=True)
+            with open(tag_file_path, 'w', encoding='utf-8') as tag_file:
+                tag_file.write(tag_page_content)
+            print(f"Created tag page for: {tag}")
+        else:
+            print(f"Tag page for '{tag}' already exists.")
+
+    def main():
+        tags = get_all_tags()
+        print(f"Found tags: {tags}")
+
+        for tag in tags:
+            create_tag_page(tag)
+
+    if __name__ == "__main__":
+        main()
+    ```
+    3. Make our scripts executable with `chmod +x`
+7. Install lefthook (ubuntu)
+    - `curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.deb.sh' | sudo -E bash; sudo apt install lefthook`
+    1. Run `lefthook install` in the repo
+    2.  Add some pre-commit scripts
+        1. Does your front matter exist?
+        ```sh
+        echo "🔍 Running front matter checks..."
+
+        # Check YAML front matter in all Markdown posts
+        for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+            if ! grep -q "^---" "$file"; then
+                echo "❌ Missing front matter in $file"
+                exit 1
+            fi
+        done
+
+        echo "✅ Front Matter looks good"
+        ```
+        2. Are your image paths valid?
+        ```sh
+        echo "🔍 Running image path validation check..."
+
+        # Check image references exist
+        for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+            grep -oP '!\[.*?\]\(\K.*?(?=\))' "$file" | while read -r img; do
+                if [ ! -f ".$img" ]; then
+                    echo "⚠️ Warning: image not found: $img (referenced in $file)"
+                fi
+            done
+        done
+
+        echo "✅ All image references are valid"
+        ```
+        3. Do you need to update/generate tag pages?
+        ```sh
+        echo "🔁 Generating tag pages..."
+        python3 generate_tag_pages.py
+
+        if [ $? -ne 0 ]; then
+          echo "❌ Tag generation failed. Commit aborted."
+          exit 1
+        fi
+
+        # Auto-add new tag files to the commit
+        git add tags/*.md
+
+        echo "✅ Tag pages updated and staged."
+        ```
+    3.  Add some pre-push scripts
+        1. Does your blog build?
+        ```sh
+        echo "🛠 Building site before push..."
+
+        bundle exec jekyll build --future > /dev/null
+
+        if [ $? -ne 0 ]; then
+            echo "❌ Jekyll build failed. Push aborted."
+            exit 1
+        else
+            echo "✅ Jekyll build successful. Proceeding with push."
+        fi
+        ```
+8. test
