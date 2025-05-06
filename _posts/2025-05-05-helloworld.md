@@ -21,9 +21,8 @@ Here's some things to know about me that (hopefully) will shine through in the b
      - I'm never (lol, "never say never") going to add any kind of commenting feature here. But if you know or can find a way to contact me, I'd love to hear what you have to say about the post.
      - Thinking about it a little, that's probably best facilitated through issues, pull requests?, or any contact info that may, or may not be associated to my profile.
 
-<div style="text-align: center;">
 ![pika](/assets/images/2025/05/helloworld/hello_pikachu.png)
-</div>
+
 
 ## Setup of this web log
 

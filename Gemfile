@@ -5,6 +5,7 @@ gem "jekyll", "~> 4.3.3"
 # Plugins
 gem 'faraday-retry'
 gem "jekyll-feed"
+gem "jekyll-remote-theme"
 gem "jekyll-seo-tag"
 gem "minimal-mistakes-jekyll"
 
