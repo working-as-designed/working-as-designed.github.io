@@ -6,6 +6,9 @@ pre-commit:
     - name: valid_images_check
       run:
         .lefthook/pre-commit/valid_images_check.sh
+    - name: code_fence_content_type_check
+      run:
+        .lefthook/pre-commit/code_fence_content_type_check.sh
     - name: tag_page_creation
       run:
         .lefthook/pre-commit/tag_page_creation.sh

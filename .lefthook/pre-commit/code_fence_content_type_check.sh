@@ -1,0 +1,35 @@
+#!/bin/bash
+# filepath: .lefthook/pre-commit/code_fence_content_type_check.sh
+
+echo "🔍 Checking for code fences without or with invalid content type..."
+
+# Define allowed content types (add more as needed)
+ALLOWED_TYPES="bash|sh|zsh|python|py|js|javascript|json|yaml|yml|html|css|scss|ruby|rb|go|c|cpp|java|php|sql|markdown|md|text|txt|toml|ini|makefile|dockerfile|powershell|ps1|xml|diff|shell|console|plaintext"
+
+failed=0
+
+for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+    while IFS= read -r line; do
+        lineno=$(echo "$line" | cut -d: -f1)
+        content=$(echo "$line" | cut -d: -f2-)
+        # Check for code fence without content type
+        if [[ "$content" =~ ^\`\`\`[[:space:]]*$ ]]; then
+            echo "❌ $file:$lineno - Code fence without content type"
+            failed=1
+        # Check for code fence with invalid content type
+        elif [[ "$content" =~ ^\`\`\`([[:alnum:]-_]+) ]]; then
+            type=$(echo "$content" | sed -E 's/^```([[:alnum:]-_]+).*/\1/')
+            if ! [[ "$type" =~ ^($ALLOWED_TYPES)$ ]]; then
+                echo "❌ $file:$lineno - Code fence with unknown content type: '$type'"
+                failed=1
+            fi
+        fi
+    done < <(grep -n '^```' "$file")
+done
+
+if [ $failed -eq 1 ]; then
+    echo "❌ Commit aborted: Please specify a valid language/content type for all code fences."
+    exit 1
+else
+    echo "✅ All code fences specify a valid content type."
+fi
