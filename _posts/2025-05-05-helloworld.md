@@ -299,7 +299,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
 8. Check your deployment method
     1. This blog is using github actions, this is the definition that's working for me. **MAKE SURE** that your pages settings for the repository are correct. You want to be deploying from a branch called `gh-pages`, make it if you don't have one. I'm using `/ (root)` as my folder because it seemed right at the beginning when I didn't know what I was doing.
         - **TURNS OUT**, the theme I'm using assumes a `docs/` directory, so I needed to go back and rework my config to use a remote-theme.
-        ```
+        ```yml
         name: Build and Deploy Jekyll
 
         on:
