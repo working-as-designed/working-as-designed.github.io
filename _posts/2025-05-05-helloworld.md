@@ -223,6 +223,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
 
             echo "✅ Front Matter looks good"
             ```
+
         2. Are your image paths valid?
             ```sh
             echo "🔍 Running image path validation check..."
@@ -248,6 +249,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
 
             echo "✅ Image path validation check complete."
             ```
+
         3. Do you need to update/generate tag pages?
             ```sh
             echo "🔁 Generating tag pages..."
@@ -263,6 +265,13 @@ Like all my programming these days, I started with GPT. I'll save you all the er
 
             echo "✅ Tag pages updated and staged."
             ```
+
+        4. Check for Typos?
+            - We're going to use a python tool `codespell` for this.
+            - Install it in your virtual environment with `pip install codespell`
+            - Go ahead and run it on this post, familiarize yourself with it: `codespell _posts/2025-05-05-helloworld.md `
+            - Now let's flip it into a lefthook pre-commit script:
+
     3.  Add some pre-push scripts
         1. Does your blog build?
             ```sh
@@ -277,6 +286,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
                 echo "✅ Jekyll build successful. Proceeding with push."
             fi
             ```
+
     4. Make sure your new scripts are executable with another `chmod +x`
     5. Then, make sure `lefthook.yml` references your pre-commit/pre-push scripts
         ```yml
@@ -298,6 +308,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
             run:
                 .lefthook/pre-push/build_site.sh
         ```
+
 8. Check your deployment method
     1. This blog is built from the repo using github actions, this is the definition that's working for me. **MAKE SURE** that your pages settings for the repository are correct. You want to be deploying from a branch called `gh-pages`, make it if you don't have one. I'm using `/ (root)` as my folder because it seemed right at the beginning when I didn't know what I was doing.
         - **TURNS OUT**, the theme I'm using assumes a `docs/` directory, so I needed to go back and rework my config to use a remote-theme. You live, you fuck up a lot, sometimes you learn.

@@ -1,0 +1,34 @@
+extends: default
+
+rules:
+  document-start: disable  # Jekyll front matter doesn't use "---" as YAML document start
+
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 1
+
+  indentation:
+    spaces: 2
+    indent-sequences: true
+
+  key-duplicates: enable
+
+  line-length:
+    max: 120
+    level: warning
+
+  new-line-at-end-of-file: enable
+
+  quoted-strings:
+    quote-type: double
+    required: true
+    extra-required: []
+    extra-allowed: []
+    allow-quoted-quotes: false
+    check-keys: false
+
+  trailing-spaces: enable
+
+  truthy:
+    allowed-values: ["true", "false", "yes", "no", "on", "off"]
