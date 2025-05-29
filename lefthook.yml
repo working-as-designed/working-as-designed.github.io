@@ -4,6 +4,10 @@ pre-commit:
     - name: validate_python_requirements
       run:
         .lefthook/pre-commit/validate_python_requirements.sh
+    - name: validate_ruby_requirements
+      run:
+        .lefthook/pre-commit/validate_ruby_requirements.sh
+    # Validate content files
     - name: is_front_matter_check
       run:
         .lefthook/pre-commit/is_front_matter_check.sh
