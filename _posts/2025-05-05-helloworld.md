@@ -28,10 +28,11 @@ Here's some things to know about me that (hopefully) will shine through in the b
 Like all my programming these days, I started with GPT. I'll save you all the errors that it made, and stick to the salient points.
 
 1. Use Jekyll
-    - **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages. That's all we need for now. This is a god time to go find a plastic baggie, because you're probably going to throw up in your mouth a little bit. It's Ruby!
+    - **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages. That's all we need for now. (This is a good time to go find a plastic baggie, because you're probably going to throw up in your mouth a little bit...) It's powered by Ruby!
+      - Ruby's mostly fine, I just came up in it's era of competition with Python, and I chose my champion early.
 2. Create the github repo
-   - For me, its `working-as-designed.github.io`. Wow! nobody claimed it already. So lucky.
-3. Add some content to your local repo. You'll want these at least, but probably more depending on how fancy you get with custom theming:
+   - For me, its `working-as-designed.github.io`. Wow! nobody claimed it already. _So lucky._
+3. Add some content to your local repo. You'll want these at least, but probably more depending on how fancy you get with custom theming (Note: My theme is all messed up right now. It's work in progress, we'll improve it down the road):
     ```
     Gemfile
     _config.yml
@@ -52,7 +53,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
     gem "jekyll-seo-tag"
     gem "minimal-mistakes-jekyll"
     ```
-5. Create a basic `_config.yml`. This is an ultra-basic configuration, cause we keep it simple, baby
+5. Create a basic `_config.yml`. This is an ultra-basic configuration, cause we keep it simple babyyy
     ```yml
     title: working-as-designed
     description: This is my blog. There are many like it, but this one is mine.
@@ -85,7 +86,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
             custom: custom-sidebar
 
     ```
-6. Create some helper scripts
+6. Create some helper scripts. Someday (probably soon) I'll move these into a dedicated directory.
     1. New Post boilerplate
         ```py
         import os
@@ -204,8 +205,9 @@ Like all my programming these days, I started with GPT. I'll save you all the er
 7. Install lefthook (on ubuntu)
     - `curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.deb.sh' | sudo -E bash; sudo apt install lefthook`
     - At the time of this writing, I'm using version `1.11.12`, and GPT is ALL OVER THE PLACE with its' suggestions about it. Beware.
+    - Check out [the repo for this site](https://github.com/working-as-designed/working-as-designed.github.io/tree/main/.lefthook) to see future additions.
     1. Run `lefthook install` in the repo
-        - If lefthook ain't doing shit, you probably need to modify `/lefthook.yml`. We wil return to this momentarily...
+        - If lefthook ain't doing shit, you probably need to modify `/lefthook.yml`. We will return to this momentarily...
     2.  Add some pre-commit scripts
         1. Does your front matter exist?
             ```sh
@@ -239,7 +241,7 @@ Like all my programming these days, I started with GPT. I'll save you all the er
                         echo "👍 Image validated: $img (line $line_number in $file)"
                         validated_images+=("$img")
                     else
-                        echo "🚨 Warning: percieved image not found: $img (line $line_number in $file)"
+                        echo "🚨 Warning: perceived image not found: $img (line $line_number in $file)"
                     fi
                 done < <(grep -n -oP '!\[.*?\]\(\K.*?(?=\))' "$file")
             done
@@ -297,8 +299,8 @@ Like all my programming these days, I started with GPT. I'll save you all the er
                 .lefthook/pre-push/build_site.sh
         ```
 8. Check your deployment method
-    1. This blog is using github actions, this is the definition that's working for me. **MAKE SURE** that your pages settings for the repository are correct. You want to be deploying from a branch called `gh-pages`, make it if you don't have one. I'm using `/ (root)` as my folder because it seemed right at the beginning when I didn't know what I was doing.
-        - **TURNS OUT**, the theme I'm using assumes a `docs/` directory, so I needed to go back and rework my config to use a remote-theme.
+    1. This blog is built from the repo using github actions, this is the definition that's working for me. **MAKE SURE** that your pages settings for the repository are correct. You want to be deploying from a branch called `gh-pages`, make it if you don't have one. I'm using `/ (root)` as my folder because it seemed right at the beginning when I didn't know what I was doing.
+        - **TURNS OUT**, the theme I'm using assumes a `docs/` directory, so I needed to go back and rework my config to use a remote-theme. You live, you fuck up a lot, sometimes you learn.
         ```yml
         name: Build and Deploy Jekyll
 
@@ -338,3 +340,4 @@ Like all my programming these days, I started with GPT. I'll save you all the er
 
 By now, hopefully you're seeing fun outputs whenever you make new commits to the repo. Make sure to check your `git status` before pushing, you might need to commit newly auto-generated content.
    - **Important:** I might've missed some steps. I spent 12 hours off and on fighting Jekyll to get a successful deployment, I did my best to capture what is relevant in this post.
+   - I've edited this post a few times to fix minor things: clarify some language, add links, fix broken formatting. Everything described here is mirrored in the repository, I'm just walking you through my process and justifying the decisions made. Take what you like, send me some feedback if you think I'm egregiously messing things up or otherwise could be doing things easier.

@@ -1,17 +1,25 @@
 pre-commit:
   jobs:
-    - name: front_matter_check
+    # Validate repository-wide configurations before checking content
+    - name: validate_python_requirements
       run:
-        .lefthook/pre-commit/front_matter_check.sh
-    - name: valid_images_check
+        .lefthook/pre-commit/validate_python_requirements.sh
+    - name: is_front_matter_check
       run:
-        .lefthook/pre-commit/valid_images_check.sh
-    - name: code_fence_content_type_check
+        .lefthook/pre-commit/is_front_matter_check.sh
+    - name: validate_code_fence_content_type_check
       run:
-        .lefthook/pre-commit/code_fence_content_type_check.sh
-    - name: tag_page_creation
+        .lefthook/pre-commit/validate_code_fence_content_type_check.sh
+    - name: validate_images_check
       run:
-        .lefthook/pre-commit/tag_page_creation.sh
+        .lefthook/pre-commit/validate_images_check.sh
+    - name: validate_spelling_warn_only
+      run:
+        .lefthook/pre-commit/validate_spelling_warn_only.sh
+    # Run after the above checks have passed
+    - name: generate_tag_pages
+      run:
+        .lefthook/pre-commit/generate_tag_pages.sh
 
 pre-push:
   jobs:
