@@ -14,4 +14,3 @@ for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
 done
 
 echo "✅ Front Matter looks good"
-

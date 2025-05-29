@@ -9,19 +9,29 @@ ALLOWED_TYPES="bash|sh|zsh|python|py|js|javascript|json|yaml|yml|html|css|scss|r
 failed=0
 
 for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+    in_code_block=false
     while IFS= read -r line; do
         lineno=$(echo "$line" | cut -d: -f1)
         content=$(echo "$line" | cut -d: -f2-)
-        # Check for code fence without content type
-        if [[ "$content" =~ ^\`\`\`[[:space:]]*$ ]]; then
-            echo "❌ $file:$lineno - Code fence without content type"
-            failed=1
-        # Check for code fence with invalid content type
-        elif [[ "$content" =~ ^\`\`\`([[:alnum:]-_]+) ]]; then
-            type=$(echo "$content" | sed -E 's/^```([[:alnum:]-_]+).*/\1/')
-            if ! [[ "$type" =~ ^($ALLOWED_TYPES)$ ]]; then
-                echo "❌ $file:$lineno - Code fence with unknown content type: '$type'"
-                failed=1
+        if [[ "$content" =~ ^[[:space:]]*\`\`\+ ]]; then
+            # Fenced code block (opening or closing)
+            if [ "$in_code_block" = false ]; then
+                # Opening fence
+                if [[ "$content" =~ ^[[:space:]]*\`\`\`$ ]]; then
+                    # No language specified
+                    echo "❌ $file:$lineno - Code fence without content type"
+                    failed=1
+                elif [[ "$content" =~ ^[[:space:]]*\`\`\`([[:alnum:]-_]+) ]]; then
+                    type=$(echo "$content" | sed -E 's/^[[:space:]]*```([[:alnum:]-_]+).*/\1/')
+                    if ! [[ "$type" =~ ^($ALLOWED_TYPES)$ ]]; then
+                        echo "❌ $file:$lineno - Code fence with unknown content type: '$type'"
+                        failed=1
+                    fi
+                fi
+                in_code_block=true
+            else
+                # Closing fence, just toggle state
+                in_code_block=false
             fi
         fi
     done < <(grep -n '^```' "$file")

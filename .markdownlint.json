@@ -1,0 +1,12 @@
+{
+  "default": true,
+  "MD013": false,         // Disable line length
+  "MD033": false,         // Allow inline HTML (Jekyll often uses it)
+  "MD041": false,         // No need for first line heading (Jekyll uses front matter)
+  "MD046": { "style": "fenced" }, // Fenced code blocks preferred
+  "MD004": { "style": "consistent" }, // Unordered list style, but not enforced
+  "MD007": { "indent": 2 },           // List indentation
+  "MD029": { "style": "ordered" },    // Ordered list marker style
+  "MD024": { "allow_different_nesting": true }, // Allow same heading in different nesting
+  "MD025": false          // Allow multiple top-level headings (Jekyll posts may have h1 in content)
+}

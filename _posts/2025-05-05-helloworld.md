@@ -4,6 +4,7 @@ title: "Hello World!"
 tags: [helloworld, jekyll]
 ---
 
+<!-- markdownlint-disable-next-line MD026 -->
 ## Hello World!
 
 This is more of a test post than anything else, but welcome to my web log! Experience has taught me that computers are pain and that memory is fickle, I'm writing these posts with myself as the primary audience and I'm publishing them so that maybe they can help somebody else out.
@@ -22,333 +23,366 @@ Here's some things to know about me that (hopefully) will shine through in the b
 
 ![pika](/assets/images/2025/05/helloworld/hello_pikachu.png)
 
-
 ## Setup of this web log
 
 Like all my programming these days, I started with GPT. I'll save you all the errors that it made, and stick to the salient points.
 
-1. Use Jekyll
-    - **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages. That's all we need for now. (This is a good time to go find a plastic baggie, because you're probably going to throw up in your mouth a little bit...) It's powered by Ruby!
-      - Ruby's mostly fine, I just came up in it's era of competition with Python, and I chose my champion early.
-2. Create the github repo
-   - For me, its `working-as-designed.github.io`. Wow! nobody claimed it already. _So lucky._
-3. Add some content to your local repo. You'll want these at least, but probably more depending on how fancy you get with custom theming (Note: My theme is all messed up right now. It's work in progress, we'll improve it down the road):
-    ```
-    Gemfile
-    _config.yml
-    _layouts/tag_page.html (for using jekyll's built-in tagging feature)
-    _posts/
-    assets/
-    ```
-4. Add the needful to the `Gemfile`. These are the imports that github will need to be making on our behalf.
-    ```
-    source "https://rubygems.org"
+### Use Jekyll
 
-    gem "jekyll", "~> 4.3.3"
+- **Why?** It's easy, it's static content, it's a relatively ancient tool, and it works with github pages. That's all we need for now. (This is a good time to go find a plastic baggie, because you're probably going to throw up in your mouth a little bit...) It's powered by Ruby!
+- Ruby's mostly fine, I just came up in it's era of competition with Python, and I chose my champion early.
 
-    # Plugins
-    gem 'faraday-retry'
-    gem "jekyll-feed"
-    gem "jekyll-remote-theme"
-    gem "jekyll-seo-tag"
-    gem "minimal-mistakes-jekyll"
-    ```
-5. Create a basic `_config.yml`. This is an ultra-basic configuration, cause we keep it simple babyyy
-    ```yml
-    title: working-as-designed
-    description: This is my blog. There are many like it, but this one is mine.
-    baseurl: ""
-    url: "https://working-as-designed.github.io"
-    theme: minimal-mistakes-jekyll
+### Create the github repo
 
-    plugins:
-    - jekyll-feed
-    - jekyll-seo-tag
+- For me, its `working-as-designed.github.io`. Wow! nobody claimed it already. _So lucky._
 
-    tag_page_layout: custom-tag
-    tag_page_dir: tags
-    tag_permalink_style: pretty
+### Add some content to your local repo
 
-    # Enable sidebar globally
+You'll want these at least, but probably more depending on how fancy you get with custom theming (Note: My theme is all messed up right now. It's work in progress, we'll improve it down the road):
+
+```txt
+Gemfile
+_config.yml
+_layouts/tag_page.html (for using jekyll's built-in tagging feature)
+_posts/
+assets/
+```
+
+### Add the needful to the `Gemfile`
+
+These are the imports that github will need to be making on our behalf.
+
+```txt
+source "https://rubygems.org"
+
+gem "jekyll", "~> 4.3.3"
+
+# Plugins
+gem 'faraday-retry'
+gem "jekyll-feed"
+gem "jekyll-remote-theme"
+gem "jekyll-seo-tag"
+gem "minimal-mistakes-jekyll"
+```
+
+### Create a basic `_config.yml`
+
+This is an ultra-basic configuration, cause we keep it simple babyyy
+
+```yml
+title: working-as-designed
+description: This is my blog. There are many like it, but this one is mine.
+baseurl: ""
+url: "https://working-as-designed.github.io"
+theme: minimal-mistakes-jekyll
+
+plugins:
+- jekyll-feed
+- jekyll-seo-tag
+
+tag_page_layout: custom-tag
+tag_page_dir: tags
+tag_permalink_style: pretty
+
+# Enable sidebar globally
+sidebar:
+enabled: true
+nav: "main"     # Refers to _data/navigation.yml
+
+defaults:
+- scope:
+    path: ""
+    type: "posts"
+    values:
+    layout: single
     sidebar:
-    enabled: true
-    nav: "main"     # Refers to _data/navigation.yml
+        enabled: true
+        nav: main
+        custom: custom-sidebar
 
-    defaults:
-    - scope:
-        path: ""
-        type: "posts"
-        values:
-        layout: single
-        sidebar:
-            enabled: true
-            nav: main
-            custom: custom-sidebar
+```
 
+### Create some helper scripts
+
+Someday (probably soon) I'll move these into a dedicated directory.
+
+1. New Post boilerplate
+
+   - Woah! A python dependency? **yeah, I think we need to manage a venv**. I Don't wanna keep cluttering this post with more code you can reference in the repository, but check out the `Makefile` and `requirements.txt`
+
+    ```py
+    import os
+    import sys
+    import datetime
+    import re
+
+    def slugify(title):
+        # Convert to lowercase, remove non-word characters, and replace spaces with dashes
+        return re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+
+    def create_post(title):
+        today = datetime.date.today()
+        year = today.strftime("%Y")
+        month = today.strftime("%m")
+        day = today.strftime("%d")
+
+        slug = slugify(title)
+        filename = f"{year}-{month}-{day}-{slug}.md"
+        post_path = os.path.join("_posts", filename)
+        asset_path = os.path.join("assets", "images", year, month, slug)
+
+        # Make directories if needed
+        os.makedirs(asset_path, exist_ok=True)
+
+        # Markdown front matter template
+        content = f"""---
+    layout: post
+    title: "{title}"
+    date: {year}-{month}-{day}
+    tags: []
+    ---
+
+    ![Alt text](/assets/images/{year}/{month}/{slug}/image.png)
+
+    Write your content here.
+    """
+
+        with open(post_path, "w") as f:
+            f.write(content)
+
+        print(f"✔ Created post: {post_path}")
+        print(f"✔ Created asset folder: {asset_path}")
+
+    if __name__ == "__main__":
+        if len(sys.argv) < 2:
+            print("Usage: python newpost.py \"Post Title Here\"")
+            sys.exit(1)
+
+        title = sys.argv[1]
+        create_post(title)
     ```
-6. Create some helper scripts. Someday (probably soon) I'll move these into a dedicated directory.
-    1. New Post boilerplate
-        ```py
-        import os
-        import sys
-        import datetime
-        import re
 
-        def slugify(title):
-            # Convert to lowercase, remove non-word characters, and replace spaces with dashes
-            return re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+2. Generate tag pages
 
-        def create_post(title):
-            today = datetime.date.today()
-            year = today.strftime("%Y")
-            month = today.strftime("%m")
-            day = today.strftime("%d")
+    ```py
+    #!/usr/bin/env python3
 
-            slug = slugify(title)
-            filename = f"{year}-{month}-{day}-{slug}.md"
-            post_path = os.path.join("_posts", filename)
-            asset_path = os.path.join("assets", "images", year, month, slug)
+    import os
+    import yaml
+    from glob import glob
+    from pathlib import Path
+    from slugify import slugify  # pip install python-slugify
 
-            # Make directories if needed
-            os.makedirs(asset_path, exist_ok=True)
+    POSTS_DIR = "_posts"
+    TAGS_DIR = "tags"
 
-            # Markdown front matter template
-            content = f"""---
-        layout: post
-        title: "{title}"
-        date: {year}-{month}-{day}
-        tags: []
-        ---
+    def extract_tags_from_post(file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            if content.startswith("---"):
+                end = content.find("---", 3)
+                if end != -1:
+                    front_matter = content[3:end]
+                    try:
+                        metadata = yaml.safe_load(front_matter)
+                        return metadata.get('tags', [])
+                    except yaml.YAMLError:
+                        print(f"⚠️ Failed to parse YAML in: {file_path}")
+        return []
 
-        ![Alt text](/assets/images/{year}/{month}/{slug}/image.png)
+    def collect_all_tags():
+        tag_map = {}
+        for file in glob(f"{POSTS_DIR}/*.md"):
+            tags = extract_tags_from_post(file)
+            for tag in tags:
+                tag_slug = slugify(tag)
+                tag_map.setdefault(tag_slug, {
+                    "name": tag,
+                    "posts": []
+                })
+                tag_map[tag_slug]["posts"].append(file)
+        return tag_map
 
-        Write your content here.
-        """
+    def generate_tag_pages(tag_map):
+        os.makedirs(TAGS_DIR, exist_ok=True)
+        for slug, data in tag_map.items():
+            tag_filename = os.path.join(TAGS_DIR, f"{slug}.html")
+            with open(tag_filename, 'w', encoding='utf-8') as f:
+                f.write(f"""---
+    layout: custom-tag
+    title: "Posts tagged with '{data['name']}'"
+    tag: {data['name']}
+    permalink: /tags/{slug}.html
+    ---
 
-            with open(post_path, "w") as f:
-                f.write(content)
+    <!-- This page is auto-generated -->
+    """)
+            print(f"👍 Created tag page: {tag_filename}")
 
-            print(f"✔ Created post: {post_path}")
-            print(f"✔ Created asset folder: {asset_path}")
+    if __name__ == "__main__":
+        tag_map = collect_all_tags()
+        generate_tag_pages(tag_map)
+        print("✅ All tag pages generated successfully.")
+    ```
 
-        if __name__ == "__main__":
-            if len(sys.argv) < 2:
-                print("Usage: python newpost.py \"Post Title Here\"")
-                sys.exit(1)
+3. Make our scripts executable with `chmod +x`
 
-            title = sys.argv[1]
-            create_post(title)
-        ```
-    2. Generate tag pages
-        ```py
-        #!/usr/bin/env python3
+### Install lefthook (on ubuntu)
 
-        import os
-        import yaml
-        from glob import glob
-        from pathlib import Path
-        from slugify import slugify  # pip install python-slugify
+- `curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.deb.sh' | sudo -E bash; sudo apt install lefthook`
+- At the time of this writing, I'm using version `1.11.12`, and GPT is ALL OVER THE PLACE with its' suggestions about it. Beware.
+- Check out [the repo for this site](https://github.com/working-as-designed/working-as-designed.github.io/tree/main/.lefthook) to see future additions.
+- **Run `lefthook install` in the repo**
 
-        POSTS_DIR = "_posts"
-        TAGS_DIR = "tags"
+- If lefthook ain't doing shit, you probably need to modify `/lefthook.yml`. We will return to this momentarily...
 
-        def extract_tags_from_post(file_path):
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-                if content.startswith("---"):
-                    end = content.find("---", 3)
-                    if end != -1:
-                        front_matter = content[3:end]
-                        try:
-                            metadata = yaml.safe_load(front_matter)
-                            return metadata.get('tags', [])
-                        except yaml.YAMLError:
-                            print(f"⚠️ Failed to parse YAML in: {file_path}")
-            return []
+#### Add some pre-commit scripts
 
-        def collect_all_tags():
-            tag_map = {}
-            for file in glob(f"{POSTS_DIR}/*.md"):
-                tags = extract_tags_from_post(file)
-                for tag in tags:
-                    tag_slug = slugify(tag)
-                    tag_map.setdefault(tag_slug, {
-                        "name": tag,
-                        "posts": []
-                    })
-                    tag_map[tag_slug]["posts"].append(file)
-            return tag_map
+1. Does your front matter exist?
 
-        def generate_tag_pages(tag_map):
-            os.makedirs(TAGS_DIR, exist_ok=True)
-            for slug, data in tag_map.items():
-                tag_filename = os.path.join(TAGS_DIR, f"{slug}.html")
-                with open(tag_filename, 'w', encoding='utf-8') as f:
-                    f.write(f"""---
-        layout: custom-tag
-        title: "Posts tagged with '{data['name']}'"
-        tag: {data['name']}
-        permalink: /tags/{slug}.html
-        ---
+    ```sh
+    echo "🔍 Running front matter checks..."
 
-        <!-- This page is auto-generated -->
-        """)
-                print(f"👍 Created tag page: {tag_filename}")
-
-        if __name__ == "__main__":
-            tag_map = collect_all_tags()
-            generate_tag_pages(tag_map)
-            print("✅ All tag pages generated successfully.")
-        ```
-        - Woah! A python dependency? **yeah, I think we need to manage a venv**. I Don't wanna keep cluttering this post with more code you can reference in the repository, but check out the `Makefile` and `requirements.txt`
-    3. Make our scripts executable with `chmod +x`
-7. Install lefthook (on ubuntu)
-    - `curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.deb.sh' | sudo -E bash; sudo apt install lefthook`
-    - At the time of this writing, I'm using version `1.11.12`, and GPT is ALL OVER THE PLACE with its' suggestions about it. Beware.
-    - Check out [the repo for this site](https://github.com/working-as-designed/working-as-designed.github.io/tree/main/.lefthook) to see future additions.
-    1. Run `lefthook install` in the repo
-        - If lefthook ain't doing shit, you probably need to modify `/lefthook.yml`. We will return to this momentarily...
-    2.  Add some pre-commit scripts
-        1. Does your front matter exist?
-            ```sh
-            echo "🔍 Running front matter checks..."
-
-            # Check YAML front matter in all Markdown posts
-            for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
-                if ! grep -q "^---" "$file"; then
-                    echo "❌ Missing front matter in $file"
-                    exit 1
-                fi
-            done
-
-            echo "✅ Front Matter looks good"
-            ```
-
-        2. Are your image paths valid?
-            ```sh
-            echo "🔍 Running image path validation check..."
-
-            # Initialize a list to store validated images
-            validated_images=()
-
-            # Check image references exist
-            for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
-                while IFS= read -r line; do
-                    # Extract line number and image path
-                    line_number=$(echo "$line" | cut -d: -f1)
-                    img=$(echo "$line" | cut -d: -f2-)
-
-                    if [ -f ".$img" ]; then
-                        echo "👍 Image validated: $img (line $line_number in $file)"
-                        validated_images+=("$img")
-                    else
-                        echo "🚨 Warning: perceived image not found: $img (line $line_number in $file)"
-                    fi
-                done < <(grep -n -oP '!\[.*?\]\(\K.*?(?=\))' "$file")
-            done
-
-            echo "✅ Image path validation check complete."
-            ```
-
-        3. Do you need to update/generate tag pages?
-            ```sh
-            echo "🔁 Generating tag pages..."
-            python3 generate_tag_pages.py
-
-            if [ $? -ne 0 ]; then
-            echo "❌ Tag generation failed. Commit aborted."
+    # Check YAML front matter in all Markdown posts
+    for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+        if ! grep -q "^---" "$file"; then
+            echo "❌ Missing front matter in $file"
             exit 1
-            fi
+        fi
+    done
 
-            # Auto-add new tag files to the commit
-            git add tags/*.md
+    echo "✅ Front Matter looks good"
+    ```
 
-            echo "✅ Tag pages updated and staged."
-            ```
+2. Are your image paths valid?
 
-        4. Check for Typos?
-            - We're going to use a python tool `codespell` for this.
-            - Install it in your virtual environment with `pip install codespell`
-            - Go ahead and run it on this post, familiarize yourself with it: `codespell _posts/2025-05-05-helloworld.md `
-            - Now let's flip it into a lefthook pre-commit script:
+    ```sh
+    echo "🔍 Running image path validation check..."
 
-    3.  Add some pre-push scripts
-        1. Does your blog build?
-            ```sh
-            echo "🛠 Building site before push..."
+    # Initialize a list to store validated images
+    validated_images=()
 
-            bundle exec jekyll build --future > /dev/null
+    # Check image references exist
+    for file in $(git diff --cached --name-only | grep '_posts/.*\.md$'); do
+        while IFS= read -r line; do
+            # Extract line number and image path
+            line_number=$(echo "$line" | cut -d: -f1)
+            img=$(echo "$line" | cut -d: -f2-)
 
-            if [ $? -ne 0 ]; then
-                echo "❌ Jekyll build failed. Push aborted."
-                exit 1
+            if [ -f ".$img" ]; then
+                echo "👍 Image validated: $img (line $line_number in $file)"
+                validated_images+=("$img")
             else
-                echo "✅ Jekyll build successful. Proceeding with push."
+                echo "🚨 Warning: perceived image not found: $img (line $line_number in $file)"
             fi
-            ```
+        done < <(grep -n -oP '!\[.*?\]\(\K.*?(?=\))' "$file")
+    done
 
-    4. Make sure your new scripts are executable with another `chmod +x`
-    5. Then, make sure `lefthook.yml` references your pre-commit/pre-push scripts
-        ```yml
-        pre-commit:
-        jobs:
-            - name: front_matter_check
-            run:
-                .lefthook/pre-commit/front_matter_check.sh
-            - name: valid_images_check
-            run:
-                .lefthook/pre-commit/valid_images_check.sh
-            - name: tag_page_creation
-            run:
-                .lefthook/pre-commit/tag_page_creation.sh
+    echo "✅ Image path validation check complete."
+    ```
 
-        pre-push:
-        jobs:
-            - name: build_site
-            run:
-                .lefthook/pre-push/build_site.sh
-        ```
+3. Do you need to update/generate tag pages?
 
-8. Check your deployment method
-    1. This blog is built from the repo using github actions, this is the definition that's working for me. **MAKE SURE** that your pages settings for the repository are correct. You want to be deploying from a branch called `gh-pages`, make it if you don't have one. I'm using `/ (root)` as my folder because it seemed right at the beginning when I didn't know what I was doing.
-        - **TURNS OUT**, the theme I'm using assumes a `docs/` directory, so I needed to go back and rework my config to use a remote-theme. You live, you fuck up a lot, sometimes you learn.
-        ```yml
-        name: Build and Deploy Jekyll
+    ```sh
+    echo "🔁 Generating tag pages..."
+    python3 generate_tag_pages.py
 
-        on:
-        push:
-            branches: [main]
+    if [ $? -ne 0 ]; then
+    echo "❌ Tag generation failed. Commit aborted."
+    exit 1
+    fi
 
-        jobs:
-        build-deploy:
-            runs-on: ubuntu-latest
-            steps:
-            - uses: actions/checkout@v3
+    # Auto-add new tag files to the commit
+    git add tags/*.md
 
-            - name: Setup Ruby
-                uses: ruby/setup-ruby@v1
-                with:
-                ruby-version: '3.1'
+    echo "✅ Tag pages updated and staged."
+    ```
 
-            - name: Install dependencies
-                run: |
-                gem install bundler
-                bundle install
+### Add some pre-push scripts
 
-            - name: Build site
-                run: bundle exec jekyll build -d _site
+1. Does your blog build?
 
-            - name: Deploy to GitHub Pages
-                uses: peaceiris/actions-gh-pages@v3
-                with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
-                publish_dir: ./_site
-                force_orphan: true
-                keep_files: false
-       ```
+    ```sh
+    echo "🛠 Building site before push..."
+
+    bundle exec jekyll build --future > /dev/null
+
+    if [ $? -ne 0 ]; then
+        echo "❌ Jekyll build failed. Push aborted."
+        exit 1
+    else
+        echo "✅ Jekyll build successful. Proceeding with push."
+    fi
+    ```
+
+2. Make sure your new scripts are executable with another `chmod +x`
+3. Then, make sure `lefthook.yml` references your pre-commit/pre-push scripts
+
+    ```yml
+    pre-commit:
+    jobs:
+        - name: front_matter_check
+        run:
+            .lefthook/pre-commit/front_matter_check.sh
+        - name: valid_images_check
+        run:
+            .lefthook/pre-commit/valid_images_check.sh
+        - name: tag_page_creation
+        run:
+            .lefthook/pre-commit/tag_page_creation.sh
+
+    pre-push:
+    jobs:
+        - name: build_site
+        run:
+            .lefthook/pre-push/build_site.sh
+    ```
+
+### Check your deployment method
+
+1. This blog is built from the repo using github actions, this is the definition that's working for me. **MAKE SURE** that your pages settings for the repository are correct. You want to be deploying from a branch called `gh-pages`, make it if you don't have one. I'm using `/ (root)` as my folder because it seemed right at the beginning when I didn't know what I was doing.
+
+- **TURNS OUT**, the theme I'm using assumes a `docs/` directory, so I needed to go back and rework my config to use a remote-theme. You live, you fuck up a lot, sometimes you learn.
+
+```yml
+name: Build and Deploy Jekyll
+
+on:
+push:
+    branches: [main]
+
+jobs:
+build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+        ruby-version: '3.1'
+
+    - name: Install dependencies
+        run: |
+        gem install bundler
+        bundle install
+
+    - name: Build site
+        run: bundle exec jekyll build -d _site
+
+    - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_site
+        force_orphan: true
+        keep_files: false
+```
 
 ## Conclusion
 
 By now, hopefully you're seeing fun outputs whenever you make new commits to the repo. Make sure to check your `git status` before pushing, you might need to commit newly auto-generated content.
-   - **Important:** I might've missed some steps. I spent 12 hours off and on fighting Jekyll to get a successful deployment, I did my best to capture what is relevant in this post.
-   - I've edited this post a few times to fix minor things: clarify some language, add links, fix broken formatting. Everything described here is mirrored in the repository, I'm just walking you through my process and justifying the decisions made. Take what you like, send me some feedback if you think I'm egregiously messing things up or otherwise could be doing things easier.
+
+- **Important:** I might've missed some steps. I spent 12 hours off and on fighting Jekyll to get a successful deployment, I did my best to capture what is relevant in this post.
+- I've edited this post a few times to fix minor things: clarify some language, add links, fix broken formatting. Everything described here is mirrored in the repository, I'm just walking you through my process and justifying the decisions made. Take what you like, send me some feedback if you think I'm egregiously messing things up or otherwise could be doing things easier.
+- **Big edit from the future:** most of the content from this post has been condensed into the repo's `CONTRIBUTING.md` file. You should probably start there.
