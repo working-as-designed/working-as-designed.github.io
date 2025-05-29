@@ -1,16 +1,16 @@
-title: working-as-designed
-description: This is my blog. There are many like it, but this one is mine.
+title: "working-as-designed"
+description: "This is my blog. There are many like it, but this one is mine."
 baseurl: ""
 url: "https://working-as-designed.github.io"
-theme: minimal-mistakes-jekyll
+theme: "minimal-mistakes-jekyll"
 
 plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
+  - "jekyll-feed"
+  - "jekyll-seo-tag"
 
-tag_page_layout: custom-tag
-tag_page_dir: tags
-tag_permalink_style: pretty
+tag_page_layout: "custom-tag"
+tag_page_dir: "tags"
+tag_permalink_style: "pretty"
 
 # Enable sidebar globally
 sidebar:
@@ -22,8 +22,8 @@ defaults:
       path: ""
       type: "posts"
     values:
-      layout: single
+      layout: "single"
       sidebar:
         enabled: true
-        nav: main
-        custom: custom-sidebar
+        nav: "main"
+        custom: "custom-sidebar"

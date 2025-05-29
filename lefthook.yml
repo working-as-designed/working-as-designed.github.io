@@ -7,6 +7,9 @@ pre-commit:
     - name: "validate_ruby_requirements"
       run:
         ".lefthook/pre-commit/validate_ruby_requirements.sh"
+    - name: "validate_rust_requirements"
+      run:
+        ".lefthook/pre-commit/validate_rust_requirements.sh"
     - name: "validate_lint_yaml_check"
       run:
         ".lefthook/pre-commit/validate_lint_yaml_check.sh"
@@ -17,6 +20,9 @@ pre-commit:
     - name: "validate_code_fence_content_type_check"
       run:
         ".lefthook/pre-commit/validate_code_fence_content_type_check.sh"
+    - name: "validate_hyperlinks_check"
+      run:
+        ".lefthook/pre-commit/validate_hyperlinks_check.sh"
     - name: "validate_images_check"
       run:
         ".lefthook/pre-commit/validate_images_check.sh"
