@@ -115,6 +115,22 @@ cargo install lychee
 
 ---
 
+## 6. Exif Scrubbing
+
+Some (one) pre-commit check(s) need deep image inspection / modification tooling. Maybe at some point in the future we can do cool shit like automagically write image properties for images we own, but for today, nuking metadata is good enough.
+
+- **Install Rust (if not already installed):**
+
+```bash
+# Linux
+apt install exiftool
+
+# Or via Homebrew (macOS):
+brew install exiftool
+```
+
+---
+
 ## 6. Pre-commit Hooks (Lefthook)
 
 We use [Lefthook](https://github.com/evilmartians/lefthook) to run checks before each commit.
@@ -126,14 +142,8 @@ We use [Lefthook](https://github.com/evilmartians/lefthook) to run checks before
 curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.deb.sh' | sudo -E bash
 sudo apt install lefthook
 
-# Or via Homebrew (macOS/Linux):
+# Or via Homebrew (macOS):
 brew install lefthook
-```
-
-- **Install Git hooks:**
-
-```bash
-lefthook install
 ```
 
 ---
