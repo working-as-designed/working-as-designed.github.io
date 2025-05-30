@@ -17,6 +17,11 @@ sidebar:
   enabled: true
   nav: "main"     # Refers to _data/navigation.yml
 
+
+minimal_mistakes_skin: "default" # or your chosen skin
+sass:
+  style: "compressed"
+
 defaults:
   - scope:
       path: ""
