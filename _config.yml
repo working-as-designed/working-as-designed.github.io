@@ -18,7 +18,7 @@ sidebar:
   nav: "main"     # Refers to _data/navigation.yml
 
 
-minimal_mistakes_skin: "default" # or your chosen skin
+minimal_mistakes_skin: "default"  # or your chosen skin
 sass:
   style: "compressed"
 

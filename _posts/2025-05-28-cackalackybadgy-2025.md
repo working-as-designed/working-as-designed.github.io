@@ -266,7 +266,8 @@ Until next year, I leave you with my favorite con decoration
 ## Related Content
 
 - [Alex's Backend writeup](https://medium.com/@persinac/c-ck-l-cky-con-2025-d-day-technical-retro-4c445f3e2a3d)
-- [cackalackybadgyfirmware2025](https://github.com/lockfale/cackalackybadgyfirmware2025): The public repo we'll move the firmware to after cleanup
+- [cackalackybadgyfirmware2025](https://github.com/lockfale/cackalackybadgyfirmware2025): The public repo we'll move the firmware to after it's been cleaned up. Check here for Gerbers and BOMs, links to the bankend components, and other neat code we collected along the way from con pals.
+- The [Cackalackycon Discord](https://discord.gg/a3zDHPG6be). Come hack with us!
 - the [CyberPartner Instruction Manual](https://github.com/lockfale/cackalackybadgyfirmware2025/blob/main/media/cyberpartner_manual_v1.pdf)
 - [DS1971 Data Sheet](https://www.analog.com/media/en/technical-documentation/data-sheets/DS1971.pdf)
 - [DS2430A Data Sheet](https://www.analog.com/media/en/technical-documentation/data-sheets/DS2430A.pdf)
