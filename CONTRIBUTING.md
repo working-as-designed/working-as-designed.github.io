@@ -115,9 +115,11 @@ cargo install lychee
 
 ---
 
-## 6. Exif Scrubbing
+## 6. Image tooling
 
-Some (one) pre-commit check(s) need deep image inspection / modification tooling. Maybe at some point in the future we can do cool shit like automagically write image properties for images we own, but for today, nuking metadata is good enough.
+Some pre-commit checks need deep image inspection / modification tooling. Maybe at some point in the future we can do cool shit like automagically write image properties for images we own, but for today, nuking metadata and resizing are good enough.
+
+### EXIF Scrubbing
 
 - **Install Rust (if not already installed):**
 
@@ -127,6 +129,16 @@ apt install exiftool
 
 # Or via Homebrew (macOS):
 brew install exiftool
+```
+
+### Image Resizing
+
+```bash
+# Linux
+apt install imagemagick
+
+# Or via Homebrew (macOS):
+brew install imagemagick
 ```
 
 ---
