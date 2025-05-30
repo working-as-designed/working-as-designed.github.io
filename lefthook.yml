@@ -39,6 +39,9 @@ pre-commit:
     - name: "generate_tag_pages"
       run:
         ".lefthook/pre-commit/generate_tag_pages.sh"
+    - name: "validate_exif_clean"
+      run:
+        ".lefthook/pre-commit/validate_exif_clean.sh"
 
 pre-push:
   jobs:
