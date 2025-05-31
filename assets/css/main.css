@@ -1,0 +1,2 @@
+/* Add your custom styles below */
+img { max-width: 100%; display: block; margin-left: auto; margin-right: auto; /* Optional: Add a little vertical spacing */ margin-top: 1em; margin-bottom: 1em; /* Optional: Prevent images from exceeding their natural size */ width: auto; height: auto; /* Optional: Add a subtle border-radius for aesthetics */ border-radius: 4px; /* Optional: Add a box-shadow for better contrast on light backgrounds */ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }

@@ -1,0 +1,53 @@
+pre-commit:
+  jobs:
+    # Validate repository-wide configurations & dependencies
+    - name: "validate_node_dependencies"
+      run:
+        ".lefthook/pre-commit/validate_node_requirements.sh"
+    - name: "validate_python_requirements"
+      run:
+        ".lefthook/pre-commit/validate_python_requirements.sh"
+    - name: "validate_ruby_requirements"
+      run:
+        ".lefthook/pre-commit/validate_ruby_requirements.sh"
+    - name: "validate_rust_requirements"
+      run:
+        ".lefthook/pre-commit/validate_rust_requirements.sh"
+    - name: "validate_lint_yaml_check"
+      run:
+        ".lefthook/pre-commit/validate_lint_yaml_check.sh"
+    # Validate content files
+    - name: "is_front_matter_check"
+      run:
+        ".lefthook/pre-commit/is_front_matter_check.sh"
+    - name: "validate_code_fence_content_type_check"
+      run:
+        ".lefthook/pre-commit/validate_code_fence_content_type_check.sh"
+    - name: "validate_hyperlinks_check"
+      run:
+        ".lefthook/pre-commit/validate_hyperlinks_check.sh"
+    - name: "validate_images_check"
+      run:
+        ".lefthook/pre-commit/validate_images_check.sh"
+    - name: "validate_lint_markdown"
+      run:
+        ".lefthook/pre-commit/validate_lint_markdown.sh"
+    - name: "validate_spelling_warn_only"
+      run:
+        ".lefthook/pre-commit/validate_spelling_warn_only.sh"
+    # Things to do after everything else is looking good
+    - name: "generate_tag_pages"
+      run:
+        ".lefthook/pre-commit/generate_tag_pages.sh"
+    - name: "auto_downsize_images"
+      run:
+        ".lefthook/pre-commit/auto_downsize_images.sh"
+    - name: "validate_exif_clean"
+      run:
+        ".lefthook/pre-commit/validate_exif_clean.sh"
+
+pre-push:
+  jobs:
+    - name: "build_site"
+      run:
+        ".lefthook/pre-push/build_site.sh"
