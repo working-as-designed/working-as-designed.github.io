@@ -42,13 +42,21 @@ def generate_tag_pages(tag_map):
         tag_filename = os.path.join(TAGS_DIR, f"{slug}.html")
         with open(tag_filename, 'w', encoding='utf-8') as f:
             f.write(f"""---
-layout: custom-tag
+layout: default
 title: "Posts tagged with '{data['name']}'"
 tag: {data['name']}
 permalink: /tags/{slug}.html
 ---
 
 <!-- This page is auto-generated -->
+
+<ul>
+{{% for post in site.posts %}}
+{{% if post.tags contains '{data['name']}' %}}
+    <li><a href="{{{{ post.url }}}}">{{{{ post.title }}}}</a> ({{{{ post.date | date: "%Y-%m-%d" }}}})</li>
+{{% endif %}}
+{{% endfor %}}
+</ul>
 """)
         print(f"👍 Created tag page: {tag_filename}")
 

@@ -1,34 +1,12 @@
 title: "working-as-designed"
 description: "This is my blog. There are many like it, but this one is mine."
+author: "working-as-designed"
 baseurl: ""
 url: "https://working-as-designed.github.io"
-theme: "minimal-mistakes-jekyll"
+remote_theme: "pages-themes/hacker@v0.2.0"
+
 
 plugins:
+  - "jekyll-remote-theme"
   - "jekyll-feed"
   - "jekyll-seo-tag"
-
-tag_page_layout: "custom-tag"
-tag_page_dir: "tags"
-tag_permalink_style: "pretty"
-
-# Enable sidebar globally
-sidebar:
-  enabled: true
-  nav: "main"     # Refers to _data/navigation.yml
-
-
-minimal_mistakes_skin: "default"  # or your chosen skin
-sass:
-  style: "compressed"
-
-defaults:
-  - scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: "single"
-      sidebar:
-        enabled: true
-        nav: "main"
-        custom: "custom-sidebar"

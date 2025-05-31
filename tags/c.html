@@ -1,8 +1,16 @@
 ---
-layout: custom-tag
+layout: default
 title: "Posts tagged with 'c'"
 tag: c
 permalink: /tags/c.html
 ---
 
 <!-- This page is auto-generated -->
+
+<ul>
+{% for post in site.posts %}
+{% if post.tags contains 'c' %}
+    <li><a href="{{ post.url }}">{{ post.title }}</a> ({{ post.date | date: "%Y-%m-%d" }})</li>
+{% endif %}
+{% endfor %}
+</ul>

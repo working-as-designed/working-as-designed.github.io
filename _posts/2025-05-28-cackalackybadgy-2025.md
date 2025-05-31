@@ -5,8 +5,6 @@ date: 2025-05-28
 tags: [badgelife, c, cpp, cackalackycon, lockfale, embedded, gamedev]
 ---
 
-# Cackalackybadgy: Baby's first firmware development
-
 With the most prominent example being Defcon, you'll see security conference attendees sporting a circuit board that probably _does something neat_ while also acting as a token of entry to the event. You might see other badges for special parties or repping membership to specific crews. Some badges you can buy with monies, some you can win in raffles, some you come about through contests or an exchange. This is a story about how a lifelong n00b chanced into that last category.
 
 ![The green ones are the hard-to-get ones](/assets/images/2025/05/cackalackybadgy-2025/IMG_0453.jpg)
@@ -221,7 +219,7 @@ I absolutely failed to coordinate my client-driven achievements with our backend
 
 ### Debugging Tools and Rock Mode
 
-We realized late on that we had no good grasp on when the badge was connected to WIFI, and when it could reach the MQTT backend. Luckily, our libs for each had a status function, so I quickly slapped together a menu option in the vein of existing games i'd made to display these statuses to users. This was SO HELPFUL during the conference to get badges working during network outages. I'm so glad pandatrax asked me to take this on, and I'm upset we didn't have the forsight to make more/better debugging tools further in advance.
+We realized late on that we had no good grasp on when the badge was connected to WiFi, and when it could reach the MQTT backend. Luckily, our libs for each had a status function, so I quickly slapped together a menu option in the vein of existing games i'd made to display these statuses to users. This was SO HELPFUL during the conference to get badges working during network outages. I'm so glad pandatrax asked me to take this on, and I'm upset we didn't have the forsight to make more/better debugging tools further in advance.
 
 I spent the last hours of development time before the con doors opened, making Rock Mode work. Rock mode is simple: If the backend says you're a rock, then your badge client just draws a rock that rolls around, instead of a CyberPartner progressing through its' life stages. Rock mode was meant to troll one specific person, and I hope they felt the love.
 
@@ -240,7 +238,7 @@ We had another fun issue pop up with the iButtons where if the badge registered 
 
 ### Hackers Hacking
 
-We made a little oopsie with our network security between the badge and the backend, TLS ended up getting disabled on the MQTT connections. Attendees were able to extract the badge's wifi network credentials from the firmware?, and set up a bridge on the edge of the parking lot to begin AitM'ing network traffic on Saturday night. This lead to several people publishing scripts to publish tampered data to the MQTT backend. For more on this, see the [cackalackybadgyfirmware2025](https://github.com/lockfale/cackalackybadgyfirmware2025) public repository.
+We made a little oopsie with our network security between the badge and the backend, TLS ended up getting disabled on the MQTT connections. Attendees were able to extract the badge's WiFi network credentials from the firmware?, and set up a bridge on the edge of the parking lot to begin AitM'ing network traffic on Saturday night. This lead to several people publishing scripts to publish tampered data to the MQTT backend. For more on this, see the [cackalackybadgyfirmware2025](https://github.com/lockfale/cackalackybadgyfirmware2025) public repository.
 
 I had to go night night by this point, so I'm not 100% on the details.
 

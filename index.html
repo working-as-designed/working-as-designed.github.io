@@ -34,7 +34,7 @@ title: Home
   {% assign tags = site.tags | sort %}
   {% for tag in tags %}
     <li>
-      <a href="{{ '/tags/' | append: tag[0] | slugify | append: '.html' | relative_url }}">{{ tag[0] }}</a> ({{ tag[1].size }})
+      <a href="{{ '/tags/' | append: tag[0] | append: '.html' | relative_url }}">{{ tag[0] }}</a> ({{ tag[1].size }})
     </li>
   {% endfor %}
 </ul>
