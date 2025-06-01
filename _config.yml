@@ -1,10 +1,9 @@
 title: "working-as-designed"
-description: "This is my blog. There are many like it, but this one is mine."
+description: "Experiences from security operations, engineering, incident response, and threat detection"
 author: "working-as-designed"
 baseurl: ""
 url: "https://working-as-designed.github.io"
 remote_theme: "pages-themes/hacker@v0.2.0"
-
 
 plugins:
   - "jekyll-remote-theme"

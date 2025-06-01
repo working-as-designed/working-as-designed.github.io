@@ -5,6 +5,9 @@ date: 2025-05-28
 tags: [badgelife, c, cpp, cackalackycon, lockfale, embedded, gamedev]
 ---
 
+- Table of Contents
+{:toc}
+
 With the most prominent example being Defcon, you'll see security conference attendees sporting a circuit board that probably _does something neat_ while also acting as a token of entry to the event. You might see other badges for special parties or repping membership to specific crews. Some badges you can buy with monies, some you can win in raffles, some you come about through contests or an exchange. This is a story about how a lifelong n00b chanced into that last category.
 
 ![The green ones are the hard-to-get ones](/assets/images/2025/05/cackalackybadgy-2025/IMG_0453.jpg)

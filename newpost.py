@@ -30,6 +30,9 @@ date: {year}-{month}-{day}
 tags: []
 ---
 
+- Table of Contents
+{{:toc}}
+
 ![Alt text](/assets/images/{year}/{month}/{slug}/image.png)
 
 Write your content here.
