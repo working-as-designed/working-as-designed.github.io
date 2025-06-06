@@ -1,7 +1,7 @@
 #!/bin/bash
 # filepath: .lefthook/pre-commit/auto_downsize_images.sh
 
-echo "🖼️  Checking and downsizing large images for mobile-friendliness..."
+echo "🔎  Checking and downsizing large images for mobile-friendliness..."
 
 max_width=600
 max_size=1048576 # 1MB in bytes
