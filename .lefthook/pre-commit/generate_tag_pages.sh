@@ -5,7 +5,7 @@
 #####################
 
 echo "🔁 Generating tag pages..."
-python3 generate_tag_pages.py
+python3 ./scripts/generate_tag_pages.py
 
 if [ $? -ne 0 ]; then
   echo "❌ Tag generation failed. Commit aborted."
@@ -13,6 +13,6 @@ if [ $? -ne 0 ]; then
 fi
 
 # Auto-add new tag files to the commit
-git add tags/*.md
+git add tags/*.html
 
 echo "✅ Tag pages updated and staged."

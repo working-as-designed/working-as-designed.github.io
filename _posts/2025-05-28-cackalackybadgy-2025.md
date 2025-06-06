@@ -63,7 +63,7 @@ Our existing main loop and accelerometer code would throw an interrupt whenever 
 
 To make this go away, I modified our already classful haptic library to track the state of the motor (off/on), and added a function to return that state. In our Accelerometer code, I added state tracking for when the interrupt has been attached, and a getter/setter for the time it happened.
 
-In the main loop, we can now detach the interrupt that's set on the accelerometer's interrupt pin, and re-enable the interrupt when the haptic state is off. We use the time functions to re-enable after a slight delay and inform print debugging.
+In the main loop, we can now [detach the interrupt](https://docs.arduino.cc/language-reference/en/functions/external-interrupts/detachInterrupt/) that's set on the accelerometer's interrupt pin, and [re-attach the interrupt](https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt) when the haptic state is off. We use the time functions to re-enable after a slight delay and inform print debugging.
 
 ```cpp
 // Disable accelerometer interrupts while the haptic motor is running
@@ -96,6 +96,25 @@ But, all that haptic/accelerometer work lead me to my favorite and most cheered 
 
 Originally, I had this feature dialed in to register events on an ~18" drop (about the length of a lanyard), but we opted to desensitize it in the case that people walking up stairs, or riding elevators, horseplaying, etc wouldn't experience the death.
 
+##### Main Loop handling
+
+```cpp
+void IRAM_ATTR sharedInterruptHandler() {
+    uint8_t status = BadgeAcceler::getInstance().getInterruptStatus();
+    if (status & 0x02) { // Free-fall event
+        // Start the freefall timer
+        BadgeAcceler::getInstance().isFreeFallDetected();
+        freefall_handler_flag = true;
+    }
+    if (status & 0x08) { // Single-tap event
+        tap_handler_flag = true;
+    }
+    if (status & 0x10) { // Double-tap event
+        tap_handler_flag = true;
+    }
+}
+```
+
 ```cpp
 // Immediately handle freefall routine/input
 // If badge is actively in freefall, or freefall hasn't been fully handled, do work
@@ -115,6 +134,47 @@ if (freefall_handler_flag) {
     }
     // Reset the handler flag
     freefall_handler_flag = false;
+}
+```
+
+##### Accelerometer supporting functions
+
+```cpp
+bool BadgeAcceler::isFreeFallDetected() {
+    uint8_t status = readRegister(REG_WAKE_UP_SRC);
+    if ((status & 0x20) > 0) { // Free-fall event detected
+        if (freeFallStartTime == 0) {
+            freeFallStartTime = millis(); // Record the start time
+        }
+        return true;
+    } else {
+        if (freeFallStartTime != 0) {
+            freeFallEndTime = millis(); // Record the end time
+        }
+        return false;
+    }
+}
+
+float BadgeAcceler::calculateFreeFallDistance() {
+    if (freeFallStartTime == 0 || freeFallEndTime == 0) {
+        return 0.0f; // No valid freefall event
+    }
+
+    // Get the ODR value to derive the freefall trigger duration, calculate the duration of the freefall in milliseconds
+    uint8_t ODR_value = (readRegister(REG_CTRL_REG1) >> 4) & 0x0F;
+    // Get the freefall trigger duration and convert it to milliseconds
+    // The trigger duration is in multiples of 1/ODR
+    uint8_t ffTriggerDurationMs = (((readRegister(REG_FREE_FALL) >> 3) & 0x1F) * 1000.0f) / ODR_value;
+    // Measured start time will be late, so subtract the trigger duration from it to approximate a true start time
+    float freeFallDurationSeconds = (freeFallEndTime - (freeFallStartTime - ffTriggerDurationMs)) / 1000.0f;
+
+    // Reset the freefall times for the next event
+    freeFallStartTime = 0;
+    freeFallEndTime = 0;
+
+    // Use the formula d = 0.5 * g * t^2
+    const float gravity = 9.8f; // Acceleration due to gravity in m/s^2
+    return 0.5f * gravity * freeFallDurationSeconds * freeFallDurationSeconds;
 }
 ```
 
@@ -171,6 +231,77 @@ In all actuality, I made 8 of these instead of using my brain to rotate the imag
 
 Above is an early, bad example of the working animation. Notice that one frame draws slightly smaller than the other 7! That took 45 minutes to diagnose and correct.
 
+#### Adding stateful animations
+
+One last little thing bugging the badge team, was a slow boot up speed. Turns out, on boot when displaying the Cackalaycon logo floating onto the screen, the badge was using a [delay()](https://docs.arduino.cc/language-reference/en/functions/time/delay/) call in a while loop. This is not a huge deal in a multithreaded, multicore environment, but the ESP8266 is single core, so animating this image consumed all compute until it was completed, preventing the WiFi stack from initializing and connecting to the MQTT backend.
+
+We can make this better by creating a stateful animation display function set:
+
+```cpp
+int startScrollingBitmap(const uint8_t* bitmap, int16_t x, int16_t y, int16_t width, int16_t height, int16_t speed, uint32_t holdTime) {
+    scrollingBitmapState.bitmap = bitmap;
+    scrollingBitmapState.x = x;
+    scrollingBitmapState.y = y;
+    scrollingBitmapState.width = width;
+    scrollingBitmapState.height = height;
+    scrollingBitmapState.speed = speed > 0 ? speed : 1; // Ensure speed is at least 1
+    scrollingBitmapState.active = true;
+    scrollingBitmapState.holding = false;
+    scrollingBitmapState.holdTime = holdTime;
+    scrollingBitmapState.holdStart = 0;
+
+    // Calculate the total distance the bitmap needs to scroll
+    int totalDistance = x + width;
+
+    // Calculate the number of scroll updates required
+    int scrollUpdates = (totalDistance + speed - 1) / speed; // Round up to ensure full scroll
+
+    // Calculate the number of hold updates (assuming 60 updates per second)
+    int holdUpdates = (holdTime + 16) / 17; // Approximate 60Hz update frequency (16.67ms per frame)
+
+    // Return the total number of updates
+    return scrollUpdates + holdUpdates;
+}
+
+void updateScrollingBitmap() {
+    if (!scrollingBitmapState.active) {
+        return; // No active scrolling
+    }
+
+    if (scrollingBitmapState.holding) {
+        // Check if the hold period has elapsed
+        if (millis() - scrollingBitmapState.holdStart >= scrollingBitmapState.holdTime) {
+            // End the hold state and clear the display
+            scrollingBitmapState.active = false;
+            scrollingBitmapState.holding = false;
+            BDISPLAY::display.clearDisplay();
+            BDISPLAY::display.display();
+        }
+        return; // Exit early while holding
+    }
+
+    // Clear the display
+    BDISPLAY::display.clearDisplay();
+
+    // Draw the bitmap at the current position
+    BDISPLAY::display.drawBitmap(scrollingBitmapState.x, scrollingBitmapState.y, scrollingBitmapState.bitmap, scrollingBitmapState.width, scrollingBitmapState.height, WHITE);
+
+    // Update the display
+    BDISPLAY::display.display();
+
+    // Move the bitmap to the left
+    scrollingBitmapState.x -= scrollingBitmapState.speed;
+
+    // Transition to the hold state when the bitmap exits the screen
+    if (scrollingBitmapState.x+1 + scrollingBitmapState.width <= 0) {
+        scrollingBitmapState.holding = true;
+        scrollingBitmapState.holdStart = millis(); // Record the start time of the hold period
+    }
+}
+```
+
+From here, all we need to do is set up the `startScrollingBitmap()` call in our setup function which runs on boot, and add some control flags to call `updateScrollingBitmap()` when `BDISPLAY::scrollingBitmapState.active` is true. This allows us to boot the badge and allow it to set up network connections _while the logo is displaying_, reducing boot (and testing cycle) time. I have it on good authority this is one of [@pandatrax](https://github.com/pandatrax)'s favprite changes!
+
 ### Game Templatization
 
 With Roulotto done and dusted, I cut all of the game-specific content out of it and make a template for future games. Really, it would have been hella beneficial to have this done from the beginning, but I was living, I was learning, I eventually made the game template about a week before the conference. It would be crucial to the success of my next two games...
@@ -187,7 +318,7 @@ Below are the sprites used for both of those games. They're bad, but again, I ma
 
 ### Badge Achievements
 
-Throughout this writeup, I've mentioned a bunch of silly features that ended up becoming client-side achievements that can be unlocked and viewed from within a menu. Here's a list of them dumped from the firmware by @jhkiehna4276 (discord)
+Throughout this writeup, I've mentioned a bunch of silly features that ended up becoming client-side achievements that can be unlocked and viewed from within a menu. Here's a list of them dumped from the firmware by @jhkiehna4276 (discord):
 
 ```txt
 14986 0x00094dd1 0x00094dd1 18  19           ascii   helloworldUnlocked
@@ -260,7 +391,7 @@ I hope after suffering through these notes from the badge flashing and firmware 
 - [Clarke Hackworth](https://github.com/clarkehackworth), the mother Jeff, author and iterator of finer games than I could make. A true inspiration.
 - [s0lray](https://github.com/s0lray) + Mairebear for the therapy session
 
-Until next year, I leave you with my favorite con decoration
+Until next year, I leave you with my favorite con decoration.
 
 ![The Legend](/assets/images/2025/05/cackalackybadgy-2025/notorious.jpg)
 
@@ -277,3 +408,6 @@ Until next year, I leave you with my favorite con decoration
 - [make8bitart](https://make8bitart.com/)
 - [SSD1306 Data Sheet](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf)
 - [LIS2DW12 Data Sheet](https://www.st.com/resource/en/datasheet/lis2dw12.pdf)
+  - [Setting up freefall recognition](file:///home/wain/Downloads/dt0100-setting-up-freefall-recognition-with-sts-mems-accelerometers-stmicroelectronics.pdf)
+  - [DFRobot's LIS2DW12 freefall detection](https://github.com/DFRobot/DFRobot_LIS/blob/master/python/raspberrypi/DFRobot_LIS2DW12.py#L729)
+  - [Setting up single-tap and double-tap recognition with ST’s MEMS accelerometers](https://www.st.com/resource/en/design_tip/dt0101-setting-up-singletap-and-doubletap-recognition-with-sts-mems-accelerometers-stmicroelectronics.pdf)
