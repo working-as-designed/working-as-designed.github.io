@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=df1d91ee601e793f5f3ba13a177f4669765bf47a">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Cackalackybadgy: Baby’s first firmware development | working-as-designed</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Cackalackybadgy: Baby’s first firmware development" />
+<meta name="author" content="working-as-designed" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Experiences from security operations, engineering, incident response, and threat detection" />
+<meta property="og:description" content="Experiences from security operations, engineering, incident response, and threat detection" />
+<link rel="canonical" href="https://working-as-designed.github.io/2025/05/28/cackalackybadgy-2025.html" />
+<meta property="og:url" content="https://working-as-designed.github.io/2025/05/28/cackalackybadgy-2025.html" />
+<meta property="og:site_name" content="working-as-designed" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-05-28T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Cackalackybadgy: Baby’s first firmware development" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"working-as-designed"},"dateModified":"2025-05-28T00:00:00+00:00","datePublished":"2025-05-28T00:00:00+00:00","description":"Experiences from security operations, engineering, incident response, and threat detection","headline":"Cackalackybadgy: Baby’s first firmware development","mainEntityOfPage":{"@type":"WebPage","@id":"https://working-as-designed.github.io/2025/05/28/cackalackybadgy-2025.html"},"url":"https://working-as-designed.github.io/2025/05/28/cackalackybadgy-2025.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>working-as-designed</h1>
+        </a>
+        <h2>Experiences from security operations, engineering, incident response, and threat detection</h2>
+
+        <section id="downloads">
+          
+          <a href="https://github.com/working-as-designed/working-as-designed.github.io" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <small>28 May 2025</small>
+<h1>Cackalackybadgy: Baby's first firmware development</h1>
+
+<p class="view">by working-as-designed</p>
+
+<ul id="markdown-toc">
+  <li><a href="#so-do-you-want-to-write-badge-firmware" id="markdown-toc-so-do-you-want-to-write-badge-firmware">“So, do you want to write badge firmware?”</a></li>
+  <li><a href="#hello-world" id="markdown-toc-hello-world">Hello World</a></li>
+  <li><a href="#real-time-developer-larping" id="markdown-toc-real-time-developer-larping">Real time developer LARPing</a>    <ul>
+      <li><a href="#ogrady-says" id="markdown-toc-ogrady-says">O’Grady Says</a></li>
+      <li><a href="#haptics-and-accelerometers" id="markdown-toc-haptics-and-accelerometers">Haptics and Accelerometers</a>        <ul>
+          <li><a href="#fixing-a-bug-that-was-bothering-nobody" id="markdown-toc-fixing-a-bug-that-was-bothering-nobody">Fixing a bug that was bothering nobody</a></li>
+          <li><a href="#you-dropped-an-egg-you-killed-your-cyber-partner-its-a-feature" id="markdown-toc-you-dropped-an-egg-you-killed-your-cyber-partner-its-a-feature">You dropped an egg, you killed your Cyber Partner, it’s a feature</a>            <ul>
+              <li><a href="#main-loop-handling" id="markdown-toc-main-loop-handling">Main Loop handling</a></li>
+              <li><a href="#accelerometer-supporting-functions" id="markdown-toc-accelerometer-supporting-functions">Accelerometer supporting functions</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#roulotto" id="markdown-toc-roulotto">Roulotto</a>        <ul>
+          <li><a href="#learning-to-handle-animations" id="markdown-toc-learning-to-handle-animations">Learning to handle animations</a></li>
+          <li><a href="#adding-stateful-animations" id="markdown-toc-adding-stateful-animations">Adding stateful animations</a></li>
+        </ul>
+      </li>
+      <li><a href="#game-templatization" id="markdown-toc-game-templatization">Game Templatization</a>        <ul>
+          <li><a href="#weightshake-and-the-cyberspa" id="markdown-toc-weightshake-and-the-cyberspa">WeightShake and the CyberSpa</a></li>
+        </ul>
+      </li>
+      <li><a href="#badge-achievements" id="markdown-toc-badge-achievements">Badge Achievements</a>        <ul>
+          <li><a href="#realizing-a-lil-goof-in-feature-organization" id="markdown-toc-realizing-a-lil-goof-in-feature-organization">Realizing a lil goof in feature organization</a></li>
+        </ul>
+      </li>
+      <li><a href="#debugging-tools-and-rock-mode" id="markdown-toc-debugging-tools-and-rock-mode">Debugging Tools and Rock Mode</a></li>
+    </ul>
+  </li>
+  <li><a href="#badge-launch-day" id="markdown-toc-badge-launch-day">Badge Launch Day</a>    <ul>
+      <li><a href="#updating-firmware-dereregistering-ibuttons-preserving-linecon-in-the-hhv" id="markdown-toc-updating-firmware-dereregistering-ibuttons-preserving-linecon-in-the-hhv">Updating firmware, de/reregistering iButtons, preserving linecon in the HHV</a></li>
+      <li><a href="#hackers-hacking" id="markdown-toc-hackers-hacking">Hackers Hacking</a></li>
+    </ul>
+  </li>
+  <li><a href="#closing-thoughts" id="markdown-toc-closing-thoughts">Closing Thoughts</a>    <ul>
+      <li><a href="#more-thanks" id="markdown-toc-more-thanks">More Thanks</a></li>
+    </ul>
+  </li>
+  <li><a href="#related-content" id="markdown-toc-related-content">Related Content</a></li>
+</ul>
+
+<p>With the most prominent example being Defcon, you’ll see security conference attendees sporting a circuit board that probably <em>does something neat</em> while also acting as a token of entry to the event. You might see other badges for special parties or repping membership to specific crews. Some badges you can buy with monies, some you can win in raffles, some you come about through contests or an exchange. This is a story about how a lifelong n00b chanced into that last category.</p>
+
+<p><img src="/assets/images/2025/05/cackalackybadgy-2025/IMG_0453.jpg" alt="The green ones are the hard-to-get ones" /></p>
+
+<p>I love badges for the artistry that the makers put into them, from the circuit design to the challenges coded within, the screenprinted art on top, there’s something plumb dumb neat about purpose made hardware. I’ve seen badges that act as <a href="https://en.wikipedia.org/wiki/CAN_bus">CAN bus</a> interfaces, breathalyzers, light show displays, and game controllers… I’ve seen badges hacked to play laser tag, fly quadcopters, and whistle the mosquito tone (~20KHz) at nearby passer-byers to “test their hearing”. I’ve never been an electrical engineer, hardware hacking is a dark art that I pretend to practice when soldering together kit projects like effects pedals, radio shit, maybe an AV toy.</p>
+
+<h2 id="so-do-you-want-to-write-badge-firmware">“So, do you want to write badge firmware?”</h2>
+
+<p>It’s January 2025, I’ve been out of work for a few months, and <a href="https://github.com/melvin2001">melvin2001</a> messages me asking how my C is, and if I have any interest in writing firmware for a conference badge mimicking a classic 90s toy.</p>
+
+<blockquote>
+  <p>Yeah… fuck yeah. I’m in. If you idiots are willing to merge my pull requests, I’ll keep submitting them.</p>
+</blockquote>
+
+<p>I haven’t touched C in the last ~15 years, I’ve never worked embedded development, and my github is an embarrassing blank mess… but I know this project is ambitious, it has had a lot of devs drop out, and it’s being presented at a regional conference <a href="https://cackalackycon.org/">CackalackyCon</a> that I like to get loose at. It’s an opportunity to deepen skills well outside of the Incident Response scope I’m used to, and I’m looking for any way to avoid the sharp reality that I’m not earning right now (lol plz help I still really need to gain some employment). It was basically a perfect opportunity.</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TbF29c_FpV8" title="YouTube video player" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+</iframe>
+
+<h2 id="hello-world">Hello World</h2>
+
+<p>I join right as the team is abandoning RTOS for lack of good asynchronous task support on the ESP8266 design that our hardware man has put together. I get a prototype board after a long day of driving, pull the code and work out some repo permissions issues, and get the mainline building on RTOS just as the decision is made to switch over to the poorman’s repo, an amalgamation of code from badges past.</p>
+
+<p>I cobble together some <em>very comprehensive</em> scripts for <a href="https://platformio.org/">platformIO</a> that I can use to build/flash firmware, and another to establish a serial connection to the badge. Our hardware has some fun bits: four buttons, four NeoPixels, an <a href="https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf">SSD1306</a> OLED screen, a <a href="https://www.st.com/resource/en/datasheet/lis2dw12.pdf">LIS2DW12</a> motion sensor, a <a href="https://www.adafruit.com/product/1201?gQT=1">haptic motor</a>, and a <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/DS9092-DS9092T.pdf">DS9092</a> iButton probe which would be used in conjunction with <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/DS1971.pdf">DS1971</a> iButtons (dallas keys) distributed with badges to conference attendees.</p>
+
+<h2 id="real-time-developer-larping">Real time developer LARPing</h2>
+
+<p>When I picked up my dev hardware, I got a big earful about the ibuttons and how they would be used as an authentication layer for badge users, with allusions to mitigations for shenanigans observed from the previous year’s badge. The code for this was already written and thank gahd for that, because it sounded damn complicated getting the timing right with a single core microcontroller.</p>
+
+<p>The badge itself will have a 90s toy game constantly running, attendees will need to nurture their Cyber Partner, else it might perish. And many will.</p>
+
+<p>The badge is gonna have a backend, this sounds great. Why trust what a client tells you, when your backend can be the source of truth and you’re just running a simulation on the client to yield a parallel user experience? It’s like we’re coding an MMORPG, but with much simpler graphics. Sounds like there are bunch of things I don’t need to worry about, since there will be state syncing handled by another developer on the team. <strong>SOUNDS GREAT</strong>.</p>
+
+<p><strong>So with all of this in mind,</strong> I’m thinking my best contribution opportunities are going to be:</p>
+
+<ul>
+  <li>Balancing the difficulty of keeping your Cyber Partner alive</li>
+  <li>Making sure the badge <em>is fun</em></li>
+  <li>Documentation</li>
+  <li>Knocking out whatever other small tasks people wanna delegate to me</li>
+</ul>
+
+<h3 id="ogrady-says">O’Grady Says</h3>
+
+<p>So for my first big feature, I found the code for a game on the previous year’s badge which was written in C via namespaces. I knew I wanted to use NeoPixels for non lightshow purposes, and so I set out to recreate a popular children’s memory game, reborn as <a href="https://en.wikipedia.org/wiki/Simon_Says">O’Grady Says</a>. It took me about a month of coding alone before pushing a working version, and then a friend gave me a code review through <a href="https://github.com/features/copilot">GitHub Copilot</a> which found a nice memory leak. Turns out, I wasn’t deallocating my array of randomly generated button sequences. This was enough to sell me on the vibe-coded future, so I installed it. Not every prompt has been a winner but I’m not looking back.</p>
+
+<p><em>O’Grady Says</em> was a great testing ground for many components of the badge. I needed to display the remaining round time on the screen, buzz the haptic motor any time a player or the game lit a neopixel, track user inputs, generate semi-random sequences, compare the shown light pattern to player inputs, and award credits for the larger CyberPartner game on completion. The game followed an existing state machine paradigm modeled by the game ported from the ‘24 badge, so that commnuications with the backend wouldn’t halt whenever O’Grady was running.</p>
+
+<h3 id="haptics-and-accelerometers">Haptics and Accelerometers</h3>
+
+<p>So with this initial game complete, I turn to look at the code controlling two conflicting features: A motion machine, and a motion sensing chip.</p>
+
+<p>Our <code class="language-plaintext highlighter-rouge">LIS2DW12</code> code was enough to read directional changes and issue interrupts whenever taps were detected by the badge hardware. Our code was in a C namespaces format and had large portions of some kind of example code commented out, so I dug around on github and found <a href="https://github.com/DFRobot/DFRobot_LIS/blob/master/src/DFRobot_LIS2DW12.h">something suspiciously close to our code from DFRobot</a>. Shoutout to the MIT License and the 🐐GOATS🐐 who wrote this, because every other example set I could find driving the LIS2DW12 was a horrible-to-read hodgepodge mess. I converted this all back to a C class, and added enough code to get 8bit and 12bit temperature readings working.</p>
+
+<h4 id="fixing-a-bug-that-was-bothering-nobody">Fixing a bug that was bothering nobody</h4>
+
+<p>Our existing main loop and accelerometer code would throw an interrupt whenever the chip sensed a <a href="https://www.st.com/resource/en/application_note/an5038-lis2dw12-alwayson-3axis-accelerometer-stmicroelectronics.pdf">tap event</a>. This is cool, until the haptic motor turns on and the badge registers hundreds of taps and double taps per second, browning out your serial console with prints.</p>
+
+<p>To make this go away, I modified our already classful haptic library to track the state of the motor (off/on), and added a function to return that state. In our Accelerometer code, I added state tracking for when the interrupt has been attached, and a getter/setter for the time it happened.</p>
+
+<p>In the main loop, we can now <a href="https://docs.arduino.cc/language-reference/en/functions/external-interrupts/detachInterrupt/">detach the interrupt</a> that’s set on the accelerometer’s interrupt pin, and <a href="https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt">re-attach the interrupt</a> when the haptic state is off. We use the time functions to re-enable after a slight delay and inform print debugging.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Disable accelerometer interrupts while the haptic motor is running</span>
+<span class="c1">// this eliminates legitimate HAPTAPs while the motor is on</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">BadgeHaptic</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">isHapticOn</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// Only detach the interrupt once per haptic</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">isTapInterruptAttached</span><span class="p">()){</span>
+        <span class="n">detachInterrupt</span><span class="p">(</span><span class="n">digitalPinToInterrupt</span><span class="p">(</span><span class="n">ACCELEROMETER_PIN</span><span class="p">));</span>
+        <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">setLastAccelerDetachTime</span><span class="p">(</span><span class="n">millis</span><span class="p">());</span>
+        <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">setTapInterruptAttached</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// Otherwise the haptic is off, reattach the interrupt after 300ms</span>
+<span class="c1">// to eliminate inertia-driven "ghost" taps</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">currentTime</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">isTapInterruptAttached</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">currentTime</span> <span class="o">-</span> <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">getLastAccelerDetachTime</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">attachInterrupt</span><span class="p">(</span><span class="n">ACCELEROMETER_PIN</span><span class="p">,</span> <span class="n">sharedInterruptHandler</span><span class="p">,</span> <span class="n">RISING</span><span class="p">);</span>
+            <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">setTapInterruptAttached</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The best part about fixing this bug? The dev team knew it existed, but we had (or developed) no plans to use the tap sensing functionality of the badge. It was a fun learning experience, but ultimately didn’t help out too much other than serving as an example for similar future issues.</p>
+
+<h4 id="you-dropped-an-egg-you-killed-your-cyber-partner-its-a-feature">You dropped an egg, you killed your Cyber Partner, it’s a feature</h4>
+
+<p>But, all that haptic/accelerometer work lead me to my favorite and most cheered for feature: <strong>Killing CyberPartners dropped in Egg state</strong>. The LIS2DW12 will also register freefall events by throwing an interrupt if you spend the time to get data rates and sampling times dialed in nicely. Think like harddrives needing to move the write head away from the disk when the drive is being dropped. Instead of saving your drive, we’re damaging your virtual pet.</p>
+
+<p>Originally, I had this feature dialed in to register events on an ~18” drop (about the length of a lanyard), but we opted to desensitize it in the case that people walking up stairs, or riding elevators, horseplaying, etc wouldn’t experience the death.</p>
+
+<h5 id="main-loop-handling">Main Loop handling</h5>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">IRAM_ATTR</span> <span class="nf">sharedInterruptHandler</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">uint8_t</span> <span class="n">status</span> <span class="o">=</span> <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">getInterruptStatus</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">&amp;</span> <span class="mh">0x02</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Free-fall event</span>
+        <span class="c1">// Start the freefall timer</span>
+        <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">isFreeFallDetected</span><span class="p">();</span>
+        <span class="n">freefall_handler_flag</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">&amp;</span> <span class="mh">0x08</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Single-tap event</span>
+        <span class="n">tap_handler_flag</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">&amp;</span> <span class="mh">0x10</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Double-tap event</span>
+        <span class="n">tap_handler_flag</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Immediately handle freefall routine/input</span>
+<span class="c1">// If badge is actively in freefall, or freefall hasn't been fully handled, do work</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">freefall_handler_flag</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"ACCEL: Free-fall detected, standing by for landing..."</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">isFreeFallDetected</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">float</span> <span class="n">freeFallDistance</span> <span class="o">=</span> <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">calculateFreeFallDistance</span><span class="p">();</span>
+    <span class="c1">// Ignore drops less than ~4"/10cm</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">freeFallDistance</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Tell the user they dun goofed an dropped (or launched) the baby</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">printf</span><span class="p">(</span><span class="s">"ACCEL: In freefall for approx: %.2fm / %.1f</span><span class="se">\"\n</span><span class="s">"</span><span class="p">,</span> <span class="n">freeFallDistance</span><span class="p">,</span> <span class="n">freeFallDistance</span> <span class="o">*</span> <span class="mf">39.3701</span><span class="n">f</span><span class="p">);</span>
+        <span class="n">CyberPartnerGame</span><span class="o">::</span><span class="n">getInstance</span><span class="p">().</span><span class="n">handleFreeFallEvent</span><span class="p">(</span><span class="n">freeFallDistance</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"ACCEL: Freefall distance too small, ignoring."</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// Reset the handler flag</span>
+    <span class="n">freefall_handler_flag</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="accelerometer-supporting-functions">Accelerometer supporting functions</h5>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">isFreeFallDetected</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">uint8_t</span> <span class="n">status</span> <span class="o">=</span> <span class="n">readRegister</span><span class="p">(</span><span class="n">REG_WAKE_UP_SRC</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">status</span> <span class="o">&amp;</span> <span class="mh">0x20</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Free-fall event detected</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">freeFallStartTime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">freeFallStartTime</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span> <span class="c1">// Record the start time</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">freeFallStartTime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">freeFallEndTime</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span> <span class="c1">// Record the end time</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">BadgeAcceler</span><span class="o">::</span><span class="n">calculateFreeFallDistance</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">freeFallStartTime</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">freeFallEndTime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">;</span> <span class="c1">// No valid freefall event</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Get the ODR value to derive the freefall trigger duration, calculate the duration of the freefall in milliseconds</span>
+    <span class="kt">uint8_t</span> <span class="n">ODR_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">readRegister</span><span class="p">(</span><span class="n">REG_CTRL_REG1</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">;</span>
+    <span class="c1">// Get the freefall trigger duration and convert it to milliseconds</span>
+    <span class="c1">// The trigger duration is in multiples of 1/ODR</span>
+    <span class="kt">uint8_t</span> <span class="n">ffTriggerDurationMs</span> <span class="o">=</span> <span class="p">(((</span><span class="n">readRegister</span><span class="p">(</span><span class="n">REG_FREE_FALL</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1F</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span><span class="n">f</span><span class="p">)</span> <span class="o">/</span> <span class="n">ODR_value</span><span class="p">;</span>
+    <span class="c1">// Measured start time will be late, so subtract the trigger duration from it to approximate a true start time</span>
+    <span class="kt">float</span> <span class="n">freeFallDurationSeconds</span> <span class="o">=</span> <span class="p">(</span><span class="n">freeFallEndTime</span> <span class="o">-</span> <span class="p">(</span><span class="n">freeFallStartTime</span> <span class="o">-</span> <span class="n">ffTriggerDurationMs</span><span class="p">))</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="n">f</span><span class="p">;</span>
+
+    <span class="c1">// Reset the freefall times for the next event</span>
+    <span class="n">freeFallStartTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">freeFallEndTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Use the formula d = 0.5 * g * t^2</span>
+    <span class="k">const</span> <span class="kt">float</span> <span class="n">gravity</span> <span class="o">=</span> <span class="mf">9.8</span><span class="n">f</span><span class="p">;</span> <span class="c1">// Acceleration due to gravity in m/s^2</span>
+    <span class="k">return</span> <span class="mf">0.5</span><span class="n">f</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">freeFallDurationSeconds</span> <span class="o">*</span> <span class="n">freeFallDurationSeconds</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="roulotto">Roulotto</h3>
+
+<p>Roulotto was the first classful game I made, a betting game where you can place one of several 1:1 bets or choose a number for a 1:36 bet. Roulotto’s absolutely the worst in that:</p>
+
+<ul>
+  <li>The wheel contains three Green numbers: <code class="language-plaintext highlighter-rouge">0</code>, <code class="language-plaintext highlighter-rouge">00</code>, and <code class="language-plaintext highlighter-rouge">000</code></li>
+  <li>The odds were never truly even across all numbers on the wheel</li>
+  <li>The odds shift as you bet more money</li>
+  <li>There’s only one inside bet worth placing, depending on how much money you’ve committed: 17 (Black)</li>
+</ul>
+
+<p>I’m not going to lie to you, this was 100% prompt engineering to arrive at this solution…
+But it Looks Good To Me™, I’ve play-tested it a ton, it feels fair yet biased, call it fairly uneven. I’m legit proud of how quickly this game came together.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span> <span class="n">betPercentage</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">currentBetAmount</span><span class="p">)</span> <span class="o">/</span> <span class="n">playerMoney</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">singleSpecialWeight</span> <span class="o">=</span> <span class="p">(</span><span class="n">betPercentage</span> <span class="o">*</span> <span class="mf">100.0</span><span class="n">f</span><span class="p">)</span> <span class="o">/</span> <span class="mf">4.0</span><span class="n">f</span><span class="p">;</span> <span class="c1">// Divide equally among 0, 00, 000, and 17</span>
+<span class="c1">// Initialize weights for all numbers (0 to 38)</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">weights</span><span class="p">(</span><span class="mi">39</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">);</span> <span class="c1">// Default weight is 1.0 for all numbers</span>
+
+<span class="c1">// Adjust weights for green values and 17</span>
+<span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">singleSpecialWeight</span><span class="p">;</span>  <span class="c1">// Green: 0</span>
+<span class="n">weights</span><span class="p">[</span><span class="mi">37</span><span class="p">]</span> <span class="o">+=</span> <span class="n">singleSpecialWeight</span><span class="p">;</span> <span class="c1">// Green: 00</span>
+<span class="n">weights</span><span class="p">[</span><span class="mi">38</span><span class="p">]</span> <span class="o">+=</span> <span class="n">singleSpecialWeight</span><span class="p">;</span> <span class="c1">// Green: 000</span>
+<span class="n">weights</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span> <span class="o">+=</span> <span class="n">singleSpecialWeight</span><span class="p">;</span> <span class="c1">// Black: 17</span>
+
+<span class="c1">// Calculate the total weight</span>
+<span class="kt">float</span> <span class="n">totalWeight</span> <span class="o">=</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">float</span> <span class="n">weight</span> <span class="o">:</span> <span class="n">weights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">totalWeight</span> <span class="o">+=</span> <span class="n">weight</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Generate a random number based on the weights, then determine the winning number</span>
+<span class="kt">float</span> <span class="n">randomValue</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">))</span> <span class="o">/</span> <span class="mf">10000.0</span><span class="n">f</span> <span class="o">*</span> <span class="n">totalWeight</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">cumulativeWeight</span> <span class="o">=</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">weights</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cumulativeWeight</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">randomValue</span> <span class="o">&lt;=</span> <span class="n">cumulativeWeight</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// Winning number</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="learning-to-handle-animations">Learning to handle animations</h4>
+
+<p>After getting the gameplay for Roulotto down, I wanted to spice it up by adding an animation during the “wheel spin” period. I knew I needed sprites, and i needed to draw the individual frames of the animation to the screen. I’ve never put in the time to have a talent for photoshop, but I did remember this sweet-ass web tool from <a href="https://jennschiffer.com/">Jenn Schiffer</a> [<a href="https://github.com/jennschiffer">Github</a>] called <a href="https://make8bitart.com/">make8bitart</a> which would let me use a mouse to do the thing like the absolute troglodyte that I am. <strong>So I paint:</strong></p>
+
+<p><img src="/assets/images/2025/05/cackalackybadgy-2025/RL_WHEEL_1.png" alt="Wheel 1" /> <img src="/assets/images/2025/05/cackalackybadgy-2025/RL_WHEEL_2.png" alt="Wheel 2" /></p>
+
+<p>In all actuality, I made 8 of these instead of using my brain to rotate the images programmatically… That idea hit me after I’d already had this implemented, and I wasn’t about to remove this without some kind of optimization need, because my time was better spent pressing forward on other badge features. But anyways! I’ve got these absolute dogspit PNGs, and now I need to get them into a machine-readable format. My partner in firmware crimes <a href="https://github.com/pandatrax">pandatrax</a> blesses me with <a href="http://javl.github.io/image2cpp/">image2cpp</a> by <a href="https://github.com/javl">javl</a>, and I’m off to the races with arrays of encoded sprites to animate.</p>
+
+<p><img src="/assets/images/2025/05/cackalackybadgy-2025/roulotto_animation_gif_from_video_terrible.gif" alt="Wheel 2" /></p>
+
+<p>Above is an early, bad example of the working animation. Notice that one frame draws slightly smaller than the other 7! That took 45 minutes to diagnose and correct.</p>
+
+<h4 id="adding-stateful-animations">Adding stateful animations</h4>
+
+<p>One last little thing bugging the badge team, was a slow boot up speed. Turns out, on boot when displaying the Cackalaycon logo floating onto the screen, the badge was using a <a href="https://docs.arduino.cc/language-reference/en/functions/time/delay/">delay()</a> call in a while loop. This is not a huge deal in a multithreaded, multicore environment, but the ESP8266 is single core, so animating this image consumed all compute until it was completed, preventing the WiFi stack from initializing and connecting to the MQTT backend.</p>
+
+<p>We can make this better by creating a stateful animation display function set:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">startScrollingBitmap</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">bitmap</span><span class="p">,</span> <span class="kt">int16_t</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int16_t</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int16_t</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int16_t</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int16_t</span> <span class="n">speed</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">holdTime</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="n">bitmap</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">speed</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// Ensure speed is at least 1</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">active</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holding</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holdTime</span> <span class="o">=</span> <span class="n">holdTime</span><span class="p">;</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holdStart</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Calculate the total distance the bitmap needs to scroll</span>
+    <span class="kt">int</span> <span class="n">totalDistance</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">;</span>
+
+    <span class="c1">// Calculate the number of scroll updates required</span>
+    <span class="kt">int</span> <span class="n">scrollUpdates</span> <span class="o">=</span> <span class="p">(</span><span class="n">totalDistance</span> <span class="o">+</span> <span class="n">speed</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">speed</span><span class="p">;</span> <span class="c1">// Round up to ensure full scroll</span>
+
+    <span class="c1">// Calculate the number of hold updates (assuming 60 updates per second)</span>
+    <span class="kt">int</span> <span class="n">holdUpdates</span> <span class="o">=</span> <span class="p">(</span><span class="n">holdTime</span> <span class="o">+</span> <span class="mi">16</span><span class="p">)</span> <span class="o">/</span> <span class="mi">17</span><span class="p">;</span> <span class="c1">// Approximate 60Hz update frequency (16.67ms per frame)</span>
+
+    <span class="c1">// Return the total number of updates</span>
+    <span class="k">return</span> <span class="n">scrollUpdates</span> <span class="o">+</span> <span class="n">holdUpdates</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">updateScrollingBitmap</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">active</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span> <span class="c1">// No active scrolling</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holding</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Check if the hold period has elapsed</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holdStart</span> <span class="o">&gt;=</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holdTime</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// End the hold state and clear the display</span>
+            <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">active</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holding</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">BDISPLAY</span><span class="o">::</span><span class="n">display</span><span class="p">.</span><span class="n">clearDisplay</span><span class="p">();</span>
+            <span class="n">BDISPLAY</span><span class="o">::</span><span class="n">display</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">return</span><span class="p">;</span> <span class="c1">// Exit early while holding</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Clear the display</span>
+    <span class="n">BDISPLAY</span><span class="o">::</span><span class="n">display</span><span class="p">.</span><span class="n">clearDisplay</span><span class="p">();</span>
+
+    <span class="c1">// Draw the bitmap at the current position</span>
+    <span class="n">BDISPLAY</span><span class="o">::</span><span class="n">display</span><span class="p">.</span><span class="n">drawBitmap</span><span class="p">(</span><span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">bitmap</span><span class="p">,</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">height</span><span class="p">,</span> <span class="n">WHITE</span><span class="p">);</span>
+
+    <span class="c1">// Update the display</span>
+    <span class="n">BDISPLAY</span><span class="o">::</span><span class="n">display</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+
+    <span class="c1">// Move the bitmap to the left</span>
+    <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">x</span> <span class="o">-=</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">speed</span><span class="p">;</span>
+
+    <span class="c1">// Transition to the hold state when the bitmap exits the screen</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span> <span class="o">+</span> <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">width</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holding</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">scrollingBitmapState</span><span class="p">.</span><span class="n">holdStart</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span> <span class="c1">// Record the start time of the hold period</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From here, all we need to do is set up the <code class="language-plaintext highlighter-rouge">startScrollingBitmap()</code> call in our setup function which runs on boot, and add some control flags to call <code class="language-plaintext highlighter-rouge">updateScrollingBitmap()</code> when <code class="language-plaintext highlighter-rouge">BDISPLAY::scrollingBitmapState.active</code> is true. This allows us to boot the badge and allow it to set up network connections <em>while the logo is displaying</em>, reducing boot (and testing cycle) time. I have it on good authority this is one of <a href="https://github.com/pandatrax">@pandatrax</a>’s favprite changes!</p>
+
+<h3 id="game-templatization">Game Templatization</h3>
+
+<p>With Roulotto done and dusted, I cut all of the game-specific content out of it and make a template for future games. Really, it would have been hella beneficial to have this done from the beginning, but I was living, I was learning, I eventually made the game template about a week before the conference. It would be crucial to the success of my next two games…</p>
+
+<h4 id="weightshake-and-the-cyberspa">WeightShake and the CyberSpa</h4>
+
+<p>WeightShake and the CyberSpa both are less “games” in the traditional sense, but activities you can perform with your CyberPartner to influence their stats. WeightShake uses the accelerometer to count how many times you pump virtual iron, resulting in weight loss (sometimes).</p>
+
+<p>CyberSpa is meant to be a simple and relaxing activity where the haptic turns on for a predetermined period, depending on what level of massage you buy. To soothe your tired eyes while your CyberPartner is resting up, we scroll the image of a maybe-white lotus across the screen until your massage timer expires. As a reward for not resetting your badge through the numbing haptic vibrations, your CyberPartner’s happiness increases. <em>So Relaxing</em>.</p>
+
+<p>Below are the sprites used for both of those games. They’re bad, but again, I made them myself with the above mentioned tools.</p>
+
+<p><img src="/assets/images/2025/05/cackalackybadgy-2025/bad_lotus.png" alt="Lotus" /> <img src="/assets/images/2025/05/cackalackybadgy-2025/bad_dumbbell.png" alt="bad_dumbbell" /></p>
+
+<h3 id="badge-achievements">Badge Achievements</h3>
+
+<p>Throughout this writeup, I’ve mentioned a bunch of silly features that ended up becoming client-side achievements that can be unlocked and viewed from within a menu. Here’s a list of them dumped from the firmware by @jhkiehna4276 (discord):</p>
+
+<pre><code class="language-txt">14986 0x00094dd1 0x00094dd1 18  19           ascii   helloworldUnlocked
+14987 0x00094de4 0x00094de4 10  11           ascii   suUnlocked
+14988 0x00094def 0x00094def 18  19           ascii   gotDroppedUnlocked
+14989 0x00094e02 0x00094e02 18  19           ascii   gotStarvedUnlocked
+14990 0x00094e15 0x00094e15 18  19           ascii   gotThirstyUnlocked
+14991 0x00094e28 0x00094e28 20  21           ascii   gotDepressedUnlocked
+14992 0x00094e3d 0x00094e3d 14  15           ascii   gotOldUnlocked
+14993 0x00094e4c 0x00094e4c 16  17           ascii   gotHeavyUnlocked
+14994 0x00094e5d 0x00094e5d 17  18           ascii   gotSkinnyUnlocked
+14995 0x00094e6f 0x00094e6f 17  18           ascii   gotChillyUnlocked
+14996 0x00094e81 0x00094e81 17  18           ascii   gotSweatyUnlocked
+14997 0x00094e93 0x00094e93 18  19           ascii   beatOgradyUnlocked
+14998 0x00094ea6 0x00094ea6 20  21           ascii   beatRoulottoUnlocked
+14999 0x00094ebb 0x00094ebb 16  17           ascii   d3adb33fUnlocked
+15000 0x00094ecc 0x00094ecc 8   9            ascii   tonyHawk
+</code></pre>
+
+<p>Let’s talk about some of my favorites.</p>
+
+<ol>
+  <li><strong>Remember that bit at the beginning of this post about the onewire library melvin2001 wrote?</strong> Turns out, a feature of that library was detecting dallas key reads that don’t fully comply with the spec. I have it on good authority that there’s no publicly available library (that we can find) which does, <a href="https://github.com/flipperdevices/flipperzero-firmware/blob/dev/lib/ibutton/protocols/dallas/protocol_ds1971.c">including the one used by flipperzero</a>. So, this badge effectively detects spoofed dallas keys, and will try to rewrite them with the hex <code class="language-plaintext highlighter-rouge">d3adb33f</code>. Hence, we must issue an achievement for anyone trying to use a flipper on the badge. <strong>This achievement also inverts the display color scheme</strong>, allowing for easy identification at a glance/distance of users with the achievement.</li>
+  <li><strong>beatRoulottoUnlocked</strong> was only given to those who won an inside bet. As far as I know, no one won this achievement legitimately, but I also didn’t get good metrics on the play of this game (more in a bit).</li>
+  <li>For users who successfully connected to the serial console of their badge, if any commands were entered incorrectly, the badge would rotate the screen display by 180 degrees, flipping the content upside down. <strong>If you did this 5 times for a combined rotation of 900 degrees, you unlocked the achievement tonyHawk</strong>.</li>
+  <li><strong>gotChillyUnlocked/gotSweatyUnlocked</strong> could only be achieved by lowering or raising the temperature of our badge below 60 degrees or above 90 degrees. A few people legitimately unlocked gotSweaty, but I don’t know of anyone who stuck their badge in the fridge, or used it as a drink coaster to unlock gotChilly.</li>
+  <li><strong>gotDroppedUnlocked</strong> would only trigger if you dropped the CyberPartner while it was in egg state, cracking the egg and triggering a death event. It’s an anti-game!</li>
+  <li>We hid all of our most powerful utilities on the badge behind a “su password”. An absolute work of satan, pandatrax picked a case sensitive password <code class="language-plaintext highlighter-rouge">Ecruiaiergo</code>, which took me weeks to commit to memory, because I can’t pronounce that many vowels strung together consecutively. In the end, the secret to remembering this password was to break it up into 3 little passwords: <code class="language-plaintext highlighter-rouge">Ecru</code>, <code class="language-plaintext highlighter-rouge">iai</code>, <code class="language-plaintext highlighter-rouge">ergo</code>. Accessing this mode unlocked an achievement.</li>
+</ol>
+
+<h4 id="realizing-a-lil-goof-in-feature-organization">Realizing a lil goof in feature organization</h4>
+
+<p>I absolutely failed to coordinate my client-driven achievements with our backend owner <a href="https://github.com/persinac">persianc</a>, who ended up calculating half of the same achievements regarding CyberPartner state. In the end, we reconciled event namespaces and I had the badge post to an achievements MQTT topic when unlocks were achieved, but it was definitely possible to have the two out of sync. <strong>A lesson learned</strong> for next year. Luckily though, I don’t think most people noticed since the badge was the only user-enabled view into unlocked achievements.</p>
+
+<h3 id="debugging-tools-and-rock-mode">Debugging Tools and Rock Mode</h3>
+
+<p>We realized late on that we had no good grasp on when the badge was connected to WiFi, and when it could reach the MQTT backend. Luckily, our libs for each had a status function, so I quickly slapped together a menu option in the vein of existing games i’d made to display these statuses to users. This was SO HELPFUL during the conference to get badges working during network outages. I’m so glad pandatrax asked me to take this on, and I’m upset we didn’t have the forsight to make more/better debugging tools further in advance.</p>
+
+<p>I spent the last hours of development time before the con doors opened, making Rock Mode work. Rock mode is simple: If the backend says you’re a rock, then your badge client just draws a rock that rolls around, instead of a CyberPartner progressing through its’ life stages. Rock mode was meant to troll one specific person, and I hope they felt the love.</p>
+
+<h2 id="badge-launch-day">Badge Launch Day</h2>
+
+<h3 id="updating-firmware-dereregistering-ibuttons-preserving-linecon-in-the-hhv">Updating firmware, de/reregistering iButtons, preserving linecon in the HHV</h3>
+
+<p>In the spirit of basically every volunteer project, we tested everything in production, including our mass-flashing solution. I knew the linecon was real when not one, but two unique bigbrains walked up to offer their services to optimize our flashing process, including but not limited to:</p>
+
+<ol>
+  <li>Rewriting (or just writing anew) our mass-flashing solution which looks for new USB devices being plugged into a hub, and tries to throw firmware at it</li>
+  <li>Optimizing our existing build pipeline with new flags using SPI at super speeds</li>
+</ol>
+
+<p>In the end, I don’t feel bad that there was an atrocious line at a hacker con for ~a day. Linecon is <strong>THE EASIEST</strong> opportunity to make a friend by bemoaning about the one thing everybody hates: waiting in line. It’s an essential part of the con experience, no one should escape it.</p>
+
+<p>We had another fun issue pop up with the iButtons where if the badge registered an iButton but networking was not working for watever reason (there were a few), then the badge would work fine but the user couldn’t register for the discord bot which provides updates over chat about your current progress. To fix this, we had to enter the su password, which gave some users a free achievement and also possibly exposed our hard password to the masses via shoulder surfing. <strong>Next time,</strong> we’ll make debugging and troubleshooting commands accessible through a less privileged interface which DOES NOT yield an achievement.</p>
+
+<h3 id="hackers-hacking">Hackers Hacking</h3>
+
+<p>We made a little oopsie with our network security between the badge and the backend, TLS ended up getting disabled on the MQTT connections. Attendees were able to extract the badge’s WiFi network credentials from the firmware?, and set up a bridge on the edge of the parking lot to begin AitM’ing network traffic on Saturday night. This lead to several people publishing scripts to publish tampered data to the MQTT backend. For more on this, see the <a href="https://github.com/lockfale/cackalackybadgyfirmware2025">cackalackybadgyfirmware2025</a> public repository.</p>
+
+<p>I had to go night night by this point, so I’m not 100% on the details.</p>
+
+<h2 id="closing-thoughts">Closing Thoughts</h2>
+
+<p>The team got a lot of really positive feedback on the badge overall, but there was definitely a vocal minority who wanted a cute cuddly virtual pet to nuture. The anti-game features of this badge were definitely lost on those with laser focus on achieving old-age for their CyberPartner. After all, this hardware is meant to entertain you for less than 3 days while you’re distacted with a hundred other things. It’s just a badge :P</p>
+
+<p>I hope after suffering through these notes from the badge flashing and firmware desk, you’ve gained confidence to pick up some cheap embedded hardware and start mucking around with it. There’s a lot of work especially if you’re doing it all yourself, but it’s fun, it’s not too hard, and there’s a ton of examples out on the internet to lift ideas and inspiration from.</p>
+
+<h3 id="more-thanks">More Thanks</h3>
+
+<ul>
+  <li>My wife, for dealing with all my chatter, ranting, and raving about some dumb project I’m hot on. For the late nights I could’ve been on the couch not staring at my laptop. I love you!</li>
+  <li><a href="https://github.com/melvin2001">melvin2001</a> For the invite, for the dev hardware, for running lead on this whole project year after year. For handling the tariffs and everything that followed when it came for the badge in the middle of the night.</li>
+  <li><a href="https://github.com/pandatrax">pandatrax</a> For dealing with my incessant questions, sharing so many great examples, letting me crash your room, and just generally being a rad collaborator. You raised the standard on so many things for this badge, you gave us the deathButton, and I’m grateful for you.</li>
+  <li><a href="https://github.com/persinac">persianc</a> For dealing with my last minute achievement woes, for doing great IR when shit hit the fan, for just being an easy person to be near.</li>
+  <li><a href="https://github.com/clarkehackworth">Clarke Hackworth</a>, the mother Jeff, author and iterator of finer games than I could make. A true inspiration.</li>
+  <li><a href="https://github.com/s0lray">s0lray</a> + Mairebear for the therapy session</li>
+</ul>
+
+<p>Until next year, I leave you with my favorite con decoration.</p>
+
+<p><img src="/assets/images/2025/05/cackalackybadgy-2025/notorious.jpg" alt="The Legend" /></p>
+
+<h2 id="related-content">Related Content</h2>
+
+<ul>
+  <li><a href="https://medium.com/@persinac/c-ck-l-cky-con-2025-d-day-technical-retro-4c445f3e2a3d">Alex’s Backend writeup</a></li>
+  <li><a href="https://github.com/lockfale/cackalackybadgyfirmware2025">cackalackybadgyfirmware2025</a>: The public repo we’ll move the firmware to after it’s been cleaned up. Check here for Gerbers and BOMs, links to the bankend components, and other neat code we collected along the way from con pals.</li>
+  <li>The <a href="https://discord.gg/a3zDHPG6be">Cackalackycon Discord</a>. Come hack with us!</li>
+  <li>the <a href="https://github.com/lockfale/cackalackybadgyfirmware2025/blob/main/media/cyberpartner_manual_v1.pdf">CyberPartner Instruction Manual</a></li>
+  <li><a href="https://www.analog.com/media/en/technical-documentation/data-sheets/DS1971.pdf">DS1971 Data Sheet</a></li>
+  <li><a href="https://www.analog.com/media/en/technical-documentation/data-sheets/DS2430A.pdf">DS2430A Data Sheet</a></li>
+  <li><a href="https://www.analog.com/media/en/technical-documentation/data-sheets/DS9092-DS9092T.pdf">DS9092 Data Sheet</a></li>
+  <li><a href="http://javl.github.io/image2cpp/">image2cpp</a></li>
+  <li><a href="https://make8bitart.com/">make8bitart</a></li>
+  <li><a href="https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf">SSD1306 Data Sheet</a></li>
+  <li><a href="https://www.st.com/resource/en/datasheet/lis2dw12.pdf">LIS2DW12 Data Sheet</a>
+    <ul>
+      <li><a href="file:///home/wain/Downloads/dt0100-setting-up-freefall-recognition-with-sts-mems-accelerometers-stmicroelectronics.pdf">Setting up freefall recognition</a></li>
+      <li><a href="https://github.com/DFRobot/DFRobot_LIS/blob/master/python/raspberrypi/DFRobot_LIS2DW12.py#L729">DFRobot’s LIS2DW12 freefall detection</a></li>
+      <li><a href="https://www.st.com/resource/en/design_tip/dt0101-setting-up-singletap-and-doubletap-recognition-with-sts-mems-accelerometers-stmicroelectronics.pdf">Setting up single-tap and double-tap recognition with ST’s MEMS accelerometers</a></li>
+    </ul>
+  </li>
+</ul>
+
+
+
+  <small>tags: <em>badgelife</em> - <em>c</em> - <em>cpp</em> - <em>cackalackycon</em> - <em>lockfale</em> - <em>embedded</em> - <em>gamedev</em></small>
+
+
+      </section>
+    </div>
+  </body>
+</html>

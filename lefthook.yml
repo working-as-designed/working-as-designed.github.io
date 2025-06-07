@@ -1,0 +1,60 @@
+pre-commit:
+  jobs:
+    # Validate hook configuration
+    - name: "validate_lefthook_config"
+      run:
+        ".lefthook/pre-commit/validate_lefthook_config.sh"
+    # Validate repository-wide configurations & dependencies
+    - name: "validate_node_requirements"
+      run:
+        ".lefthook/pre-commit/validate_node_requirements.sh"
+    - name: "validate_python_requirements"
+      run:
+        ".lefthook/pre-commit/validate_python_requirements.sh"
+    - name: "validate_ruby_requirements"
+      run:
+        ".lefthook/pre-commit/validate_ruby_requirements.sh"
+    - name: "validate_rust_requirements"
+      run:
+        ".lefthook/pre-commit/validate_rust_requirements.sh"
+    - name: "validate_lint_yaml"
+      run:
+        ".lefthook/pre-commit/validate_lint_yaml.sh"
+    # Validate content files
+    - name: "validate_content_completed_warn_only"
+      run:
+        ".lefthook/pre-commit/validate_content_completed_warn_only.sh"
+    - name: "validate_is_front_matter"
+      run:
+        ".lefthook/pre-commit/validate_is_front_matter.sh"
+    - name: "validate_code_fence_content_type"
+      run:
+        ".lefthook/pre-commit/validate_code_fence_content_type.sh"
+    - name: "validate_hyperlinks"
+      run:
+        ".lefthook/pre-commit/validate_hyperlinks.sh"
+    - name: "validate_images"
+      run:
+        ".lefthook/pre-commit/validate_images.sh"
+    - name: "validate_lint_markdown"
+      run:
+        ".lefthook/pre-commit/validate_lint_markdown.sh"
+    - name: "validate_spelling_warn_only"
+      run:
+        ".lefthook/pre-commit/validate_spelling_warn_only.sh"
+    # Things to do after everything else is looking good
+    - name: "generate_tag_pages"
+      run:
+        ".lefthook/pre-commit/generate_tag_pages.sh"
+    - name: "auto_downsize_images"
+      run:
+        ".lefthook/pre-commit/auto_downsize_images.sh"
+    - name: "validate_exif_clean"
+      run:
+        ".lefthook/pre-commit/validate_exif_clean.sh"
+
+pre-push:
+  jobs:
+    - name: "build_site"
+      run:
+        ".lefthook/pre-push/build_site.sh"
