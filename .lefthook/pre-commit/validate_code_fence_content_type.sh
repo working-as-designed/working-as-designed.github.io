@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: .lefthook/pre-commit/code_fence_content_type_check.sh
+# filepath: .lefthook/pre-commit/code_fence_content_type.sh
 
 echo "🔍 Checking for code fences without or with invalid content type..."
 

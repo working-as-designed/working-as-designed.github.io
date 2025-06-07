@@ -1,8 +1,6 @@
 #!/bin/bash
+# filepath: .lefthook/pre-commit/validate_is_front_matter.sh
 
-########
-# Checks
-########
 echo "🔍 Running front matter checks..."
 
 # Check YAML front matter in all Markdown posts

@@ -1,8 +1,6 @@
 #!/bin/bash
+# filepath: .lefthook/pre-commit/validate_images.sh
 
-########
-# Checks
-########
 echo "🔍 Running image path validation check..."
 
 # Initialize a list to store validated images

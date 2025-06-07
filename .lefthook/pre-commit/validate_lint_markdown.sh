@@ -1,4 +1,5 @@
 #!/bin/bash
+# filepath: .lefthook/pre-commit/validate_lint_markdown.sh
 
 echo "🔎 Linting staged Markdown files..."
 

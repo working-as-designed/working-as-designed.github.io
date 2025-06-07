@@ -1,5 +1,5 @@
 #!/bin/bash
-# .lefthook/pre-commit/yaml_lint.sh
+# .lefthook/pre-commit/validate_yaml_lint.sh
 
 echo "🔍 Linting all YAML files..."
 

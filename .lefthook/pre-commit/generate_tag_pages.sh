@@ -1,8 +1,5 @@
 #!/bin/bash
-
-#####################
-# Tag page automation
-#####################
+# filepath: .lefthook/pre-commit/generate_tag_pages.sh
 
 echo "🔁 Generating tag pages..."
 python3 ./scripts/generate_tag_pages.py
