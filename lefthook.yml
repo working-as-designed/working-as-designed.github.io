@@ -1,5 +1,9 @@
 pre-commit:
   jobs:
+    # Validate hook configuration
+    - name: "validate_lefthook_config"
+      run:
+        ".lefthook/pre-commit/validate_lefthook_config.sh"
     # Validate repository-wide configurations & dependencies
     - name: "validate_node_requirements"
       run:
